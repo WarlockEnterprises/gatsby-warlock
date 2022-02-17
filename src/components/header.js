@@ -33,7 +33,7 @@ const Header = ({ siteTitle }) => (
   <Navbar bg="white" expand="md">
     <Container className="py-3">
       <Navbar.Brand href="#home">
-        <StaticImage src="../images/brand-logo.svg" alt="Warlock Logo" />
+        <StaticImage src="../assets/images/brand-logo.svg" alt="Warlock Logo" />
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">

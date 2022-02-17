@@ -69,9 +69,7 @@ function Seo({ description, lang, meta, title }) {
           content: metaDescription,
         },
       ].concat(meta)}
-    >
-      <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
-    </Helmet>
+    />
   )
 }
 
