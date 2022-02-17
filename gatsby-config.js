@@ -1,3 +1,7 @@
+require("dotenv").config({
+  path: ".env",
+})
+
 module.exports = {
   siteMetadata: {
     title: `Warlock Enterprises`,
@@ -6,6 +10,13 @@ module.exports = {
     siteUrl: `https://warlockenterprises.com`,
   },
   plugins: [
+    {
+      resolve: `gatsby-source-printful`,
+      options: {
+        apiKey: `${process.env.PRINTFUL_API_KEY}`,
+        paginationLimit: 20,
+      },
+    },
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-sass`,
     `gatsby-plugin-image`,
@@ -18,8 +29,5 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    // this (optional) plugin enables Progressive Web App + Offline functionality
-    // To learn more, visit: https://gatsby.dev/offline
-    // `gatsby-plugin-offline`,
   ],
 }

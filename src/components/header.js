@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useMemo } from "react"
 import PropTypes from "prop-types"
 import { Link } from "gatsby"
 import Navbar from "react-bootstrap/Navbar"
@@ -29,34 +29,43 @@ const links = [
   },
 ]
 
-const Header = ({ siteTitle }) => (
-  <Navbar bg="white" expand="md">
-    <Container>
-      <Navbar.Brand href="#home">
-        <StaticImage src="../assets/images/brand-logo.svg" alt="Warlock Logo" />
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ms-auto d-flex flex-row align-items-center">
-          {links.map(({ label, color, path }) => (
-            <Nav.Link
-              key={`header-link-${label}`}
-              as={Link}
-              to={path}
-              className={`me-5 ${color}`}
+const Header = ({ siteTitle }) => {
+  // Todo: Fix flicker
+  const BrandLogo = useMemo(() => () => (
+    <StaticImage src="../assets/images/brand-logo.svg" alt="Warlock Logo" />
+  ))
+  return (
+    <Navbar bg="white" expand="md">
+      <Container>
+        <Navbar.Brand href="#home">
+          <BrandLogo />
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto d-flex flex-row align-items-center">
+            {links.map(({ label, color, path }) => (
+              <Link
+                key={`header-link-${label}`}
+                to={path}
+                className={`nav-link me-5 ${color}`}
+              >
+                {label}
+              </Link>
+            ))}
+            <Link
+              className="nav-link cart-link"
+              to="/cart"
+              className="cart-link"
             >
-              {label}
-            </Nav.Link>
-          ))}
-          <Nav.Link as={Link} to="/cart" className="cart-link">
-            <i className="bi bi-cart3" />
-            <span className="ms-2 d-inline d-md-none">Cart</span>
-          </Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Container>
-  </Navbar>
-)
+              <i className="bi bi-cart3" />
+              <span className="ms-2 d-inline d-md-none">Cart</span>
+            </Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  )
+}
 
 Header.propTypes = {
   siteTitle: PropTypes.string,
