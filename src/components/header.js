@@ -31,7 +31,7 @@ const links = [
 
 const Header = ({ siteTitle }) => (
   <Navbar bg="white" expand="md">
-    <Container>
+    <Container className="py-3">
       <Navbar.Brand href="#home">
         <StaticImage src="../images/brand-logo.svg" alt="Warlock Logo" />
       </Navbar.Brand>
@@ -43,13 +43,14 @@ const Header = ({ siteTitle }) => (
               key={`header-link-${label}`}
               as={Link}
               to={path}
-              className="label me-5"
+              className={`me-5 ${color}`}
             >
               {label}
             </Nav.Link>
           ))}
-          <Nav.Link as={Link} to="/cart">
-            <ion-icon name="heart" />
+          <Nav.Link as={Link} to="/cart" className="cart-link">
+            <i className="bi bi-cart3" />
+            <span className="ms-2 d-inline d-md-none">Cart</span>
           </Nav.Link>
         </Nav>
       </Navbar.Collapse>
