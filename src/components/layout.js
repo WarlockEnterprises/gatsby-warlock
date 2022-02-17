@@ -12,8 +12,9 @@ import { useStaticQuery, graphql } from "gatsby"
 import Header from "./header"
 import "../assets/styles/layout.scss"
 import { Container } from "react-bootstrap"
+import Seo from "./seo"
 
-const Layout = ({ children }) => {
+const Layout = ({ title, children }) => {
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -26,6 +27,7 @@ const Layout = ({ children }) => {
 
   return (
     <div>
+      <Seo title={title} />
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
       <Container>{children}</Container>
     </div>
@@ -33,6 +35,7 @@ const Layout = ({ children }) => {
 }
 
 Layout.propTypes = {
+  title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
 }
 

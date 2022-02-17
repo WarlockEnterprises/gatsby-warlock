@@ -1,10 +1,10 @@
 import * as React from "react"
 import Layout from "../components/layout"
 
-const IndexPage = () => (
-  <Layout title={"Home"}>
+const ApparelPage = () => (
+  <Layout title={"Apparel"}>
     <p>Apparel grid</p>
   </Layout>
 )
 
-export default IndexPage
+export default ApparelPage

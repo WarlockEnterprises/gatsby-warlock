@@ -9,35 +9,35 @@ import { StaticImage } from "gatsby-plugin-image"
 const links = [
   {
     label: "Apparel",
-    color: "warlock-red",
+    color: "text-danger",
     path: "/apparel",
   },
   {
     label: "Prints",
-    color: "warlock-blue",
+    color: "text-secondary",
     path: "/prints",
   },
   {
     label: "NFTs",
-    color: "warlock-orange",
+    color: "text-warning",
     path: "/nfts",
   },
   {
     label: "Contact",
-    color: "warlock-green",
+    color: "text-success",
     path: "/contact",
   },
 ]
 
 const Header = ({ siteTitle }) => (
   <Navbar bg="white" expand="md">
-    <Container className="py-3">
+    <Container>
       <Navbar.Brand href="#home">
         <StaticImage src="../assets/images/brand-logo.svg" alt="Warlock Logo" />
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ms-auto">
+        <Nav className="ms-auto d-flex flex-row align-items-center">
           {links.map(({ label, color, path }) => (
             <Nav.Link
               key={`header-link-${label}`}
