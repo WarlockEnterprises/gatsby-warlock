@@ -30,15 +30,14 @@ const links = [
 ]
 
 const Header = ({ siteTitle }) => {
-  // Todo: Fix flicker
-  const BrandLogo = useMemo(() => () => (
-    <StaticImage src="../assets/images/brand-logo.svg" alt="Warlock Logo" />
-  ))
   return (
     <Navbar bg="white" expand="md">
       <Container>
         <Navbar.Brand href="#home">
-          <BrandLogo />
+          <StaticImage
+            src="../assets/images/brand-logo.svg"
+            alt="Warlock Logo"
+          />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
