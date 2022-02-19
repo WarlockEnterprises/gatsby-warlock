@@ -1,16 +1,16 @@
-import React, { useMemo } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 import { Link } from "gatsby"
 import Navbar from "react-bootstrap/Navbar"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
-import { StaticImage } from "gatsby-plugin-image"
+import brandLogo from "../assets/images/brand-logo.svg"
 
 const links = [
   {
     label: "Apparel",
     color: "text-danger",
-    path: "/apparel",
+    path: "/",
   },
   {
     label: "Prints",
@@ -33,29 +33,24 @@ const Header = ({ siteTitle }) => {
   return (
     <Navbar bg="white" expand="md">
       <Container>
-        <Navbar.Brand href="#home">
-          <StaticImage
-            src="../assets/images/brand-logo.svg"
-            alt="Warlock Logo"
-          />
+        <Navbar.Brand as={Link} to="/">
+          <img loading="eager" src={brandLogo} alt="Warlock Logo" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto d-flex flex-row align-items-center">
             {links.map(({ label, color, path }) => (
-              <Link
+              <Nav.Link
+                as={Link}
+                activeStyle={{ textDecoration: "underline" }}
                 key={`header-link-${label}`}
                 to={path}
-                className={`nav-link me-5 ${color}`}
+                className={`me-5 ${color}`}
               >
                 {label}
-              </Link>
+              </Nav.Link>
             ))}
-            <Link
-              className="nav-link cart-link"
-              to="/cart"
-              className="cart-link"
-            >
+            <Link to="/cart" className="nav-link cart-link text-black">
               <i className="bi bi-cart3" />
               <span className="ms-2 d-inline d-md-none">Cart</span>
             </Link>

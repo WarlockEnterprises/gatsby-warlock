@@ -3,7 +3,7 @@ import Layout from "../components/layout"
 import { graphql } from "gatsby"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
-import { GatsbyImage, getImage, getImageData } from "gatsby-plugin-image"
+import { GatsbyImage, getImage } from "gatsby-plugin-image"
 
 const IndexPage = ({ data }) => {
   const { products } = data.allContentfulProduct
@@ -19,14 +19,14 @@ const IndexPage = ({ data }) => {
             lg={4}
             className="d-flex flex-column justify-content-center align-items-center"
           >
-            <GatsbyImage
-              className="product-image"
-              image={getImage(p.image)}
-              alt={p.image.title}
-            />
-            {/* <span className="fs-5 font-days-one text-center my-5 text-uppercase">
-              "{p.title}"
-            </span> */}
+            <div className="position-relative overflow-hidden product-image">
+              <GatsbyImage image={getImage(p.image)} alt={p.image.title} />
+              <div className="product-title-pop-up">
+                <h5 className=" font-days-one text-center my-2 text-uppercase">
+                  "{p.title}"
+                </h5>
+              </div>
+            </div>
           </Col>
         ))}
       </Row>
