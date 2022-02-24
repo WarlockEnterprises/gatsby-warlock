@@ -1,32 +1,76 @@
-import React from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { graphql } from "gatsby"
 import Layout from "../../components/layout"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
-import { Col, Row } from "react-bootstrap"
+import { Button, Col, Form, Row } from "react-bootstrap"
 // 620ecbcb3b2424
-export default function Component({ params, data }) {
-  const { title, image, linkedPrintfulProducts } = data.contentfulProduct
-  const variants = linkedPrintfulProducts[0].variants
 
+export default function Component({ params, data }) {
+  const { title, image, products } = data.contentfulProduct
+  const [variantId, setVariantId] = useState(null)
+  const [quantity, setQuantity] = useState(1)
+
+  useEffect(() => {
+    if (printfulVariants && variantId === null) {
+      setVariantId(printfulVariants[0].id)
+    }
+  }, [printfulVariants])
+
+  const printfulVariants = useMemo(
+    () => products.reduce((arr, p) => arr.concat(p.variants), []),
+    [products]
+  )
+  const selectedVariant = useMemo(
+    () =>
+      printfulVariants &&
+      variantId &&
+      printfulVariants.find((v) => v.id === variantId),
+    [variantId, printfulVariants]
+  )
   return (
     <Layout title={title}>
-      <Row>
-        <Col className="d-flex justify-content-center flex-row">
+      <Row className="g-3">
+        <Col xs={12} className="d-md-none">
+          <h4 className="font-days-one text-center">"{title}"</h4>
+        </Col>
+        <Col xs={12} md={6} className="d-flex justify-content-center flex-row">
           <GatsbyImage image={getImage(image)} alt={`Image of ${title}`} />
         </Col>
-        <Col>
-          <h4 className="font-days-one">"{title}"</h4>
-          <select>
-            {variants.map(({ catalogVariant }) => {
-              const { name, price } = catalogVariant
 
-              return (
-                <option key={`variant-${name}`}>
-                  {name}, ${price}
-                </option>
-              )
-            })}
-          </select>
+        {/* RIGHT COLUMN */}
+        <Col xs={12} md={6}>
+          <Row className="g-3">
+            <Col xs={12} className="d-none d-md-block">
+              <h4 className="font-days-one">"{title}"</h4>
+            </Col>
+            <Col xs={12}>
+              <Form.Group>
+                <Form.Label>Product select:</Form.Label>
+                <Form.Select onChange={(e) => setVariantId(e.target.value)}>
+                  {printfulVariants.map((v) => (
+                    <option key={v.id + "-select"} value={v.id}>
+                      {v.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col xs={12}>
+              <Form.Group>
+                <Form.Label>Quantity:</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setVariantId(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+            <Col xs={6}>
+              <Button variant="warning" className="w-100 text-white">
+                Add to cart
+              </Button>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Layout>
@@ -43,11 +87,19 @@ export const query = graphql`
       image {
         gatsbyImageData(layout: CONSTRAINED, width: 400)
       }
-      linkedPrintfulProducts {
+      products: linkedPrintfulProducts {
+        id
+        name
         variants {
-          catalogVariant {
-            name
-            price
+          variant_id
+          external_id
+          retail_price
+          name
+          id
+          variantImage {
+            childImageSharp {
+              gatsbyImageData(width: 70, height: 70)
+            }
           }
         }
       }

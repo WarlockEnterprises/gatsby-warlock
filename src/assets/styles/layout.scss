@@ -15,9 +15,20 @@ $warning: $orange;
 
 $font-family-sans-serif: "Play";
 
+$border-radius: 0;
+$border-color: $primary;
+$input-border-color: $primary;
+$input-color: $primary;
+$form-select-indicator-color: $primary;
+
 .font-days-one {
   font-family: "Days One";
   font-weight: 400;
+}
+
+button.btn,
+.btn {
+  border-radius: 0;
 }
 
 @import "~bootstrap/scss/bootstrap.scss";
