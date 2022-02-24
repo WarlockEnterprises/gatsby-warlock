@@ -9,7 +9,11 @@ exports.createResolvers = ({ createResolvers }) => {
           const { entries } = await context.nodeModel.findAll({
             query: {
               filter: {
-                external_id: { in: source.printfulProducts },
+                external_id: {
+                  in: source.printfulProducts.map((str) =>
+                    str.replace("#", "")
+                  ),
+                },
               },
             },
             type: "PrintfulProduct",
