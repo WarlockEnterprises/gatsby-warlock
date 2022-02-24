@@ -1,0 +1,56 @@
+import React, { useEffect, useMemo, useState } from "react"
+import { Button, Col, Form } from "react-bootstrap"
+
+export default function ProductForm({ product, addToCart }) {
+  const [variantId, setVariantId] = useState(null)
+  const [quantity, setQuantity] = useState(1)
+
+  useEffect(() => {
+    if (product.variants) {
+      setVariantId(product.variants[0].id)
+    }
+  }, [product])
+
+  const selectedVariant = useMemo(() => {
+    if (product.variants.length > 0 && variantId) {
+      return product.variants.find(({ id }) => id === variantId)
+    }
+  }, [product, variantId])
+
+  return (
+    <>
+      <Col xs={12}>
+        <Form.Group>
+          <Form.Label>Color/Size:</Form.Label>
+          <Form.Select onChange={(e) => setVariantId(e.target.value)}>
+            {product.variants.map((v) => (
+              <option key={v.id + "-select"} value={v.id}>
+                {v.name}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+      </Col>
+      <Col xs={12}>
+        <Form.Group>
+          <Form.Label>Quantity:</Form.Label>
+          <Form.Control
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+          />
+        </Form.Group>
+      </Col>
+      <Col xs={12}>
+        <Button
+          variant="warning"
+          className="w-100 text-white"
+          disabled={!variantId}
+          onClick={() => addToCart({ variant: selectedVariant, quantity })}
+        >
+          Add to cart
+        </Button>
+      </Col>
+    </>
+  )
+}

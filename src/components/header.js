@@ -34,7 +34,12 @@ const Header = ({ siteTitle }) => {
     <Navbar bg="white" expand="md">
       <Container>
         <Navbar.Brand as={Link} to="/">
-          <img loading="eager" src={brandLogo} alt="Warlock Logo" />
+          <img
+            loading="eager"
+            src={brandLogo}
+            height={"87px"}
+            alt="Warlock Logo"
+          />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

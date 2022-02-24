@@ -21,6 +21,8 @@ $input-border-color: $primary;
 $input-color: $primary;
 $form-select-indicator-color: $primary;
 
+$input-btn-focus-width: 0.1rem;
+
 .font-days-one {
   font-family: "Days One";
   font-weight: 400;
@@ -29,6 +31,11 @@ $form-select-indicator-color: $primary;
 button.btn,
 .btn {
   border-radius: 0;
+  outline: 0;
+  &:focus,
+  &:active {
+    outline: 0;
+  }
 }
 
 @import "~bootstrap/scss/bootstrap.scss";
