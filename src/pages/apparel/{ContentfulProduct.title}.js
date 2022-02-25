@@ -5,23 +5,10 @@ import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import { Col, Row } from "react-bootstrap"
 import ProductForm from "../../components/product/ProductForm"
 import ProductSelect from "../../components/product/ProductSelect"
-import { useCart } from "react-use-cart"
 
 export default function ProductPage({ data }) {
   const { title, image, products } = data.contentfulProduct
-  const { addItem } = useCart()
-
   const [selectedProduct, setSelectedProduct] = useState()
-
-  const addToCart = ({ variant, quantity }) => {
-    const { external_id, name, retail_price } = variant
-    const newItem = {
-      id: external_id,
-      name,
-      price: retail_price * 100,
-    }
-    console.log(addItem)
-  }
 
   return (
     <Layout title={title}>
@@ -51,9 +38,7 @@ export default function ProductPage({ data }) {
                 <p>No products yet, please check back later.</p>
               )}
             </Col>
-            {selectedProduct && (
-              <ProductForm product={selectedProduct} addToCart={addToCart} />
-            )}
+            {selectedProduct && <ProductForm product={selectedProduct} />}
           </Row>
         </Col>
       </Row>
@@ -73,7 +58,7 @@ export const query = graphql`
         name
         productImage {
           childImageSharp {
-            gatsbyImageData(layout: CONSTRAINED)
+            gatsbyImageData(width: 100, height: 100)
           }
         }
         variants {

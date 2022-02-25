@@ -1,15 +1,33 @@
+import { navigate } from "gatsby"
 import React, { useEffect, useMemo, useState } from "react"
 import { Button, Col, Form } from "react-bootstrap"
+import { useCart } from "react-use-cart"
 
-export default function ProductForm({ product, addToCart }) {
+export default function ProductForm({ product }) {
   const [variantId, setVariantId] = useState(null)
   const [quantity, setQuantity] = useState(1)
+  const { addItem } = useCart()
 
   useEffect(() => {
     if (product.variants) {
       setVariantId(product.variants[0].id)
     }
   }, [product])
+
+  const addToCart = ({ variant, quantity }) => {
+    const { external_id, name, retail_price } = variant
+
+    const newItem = {
+      id: external_id,
+      name,
+      price: retail_price * 100,
+      image: product.productImage,
+    }
+
+    addItem(newItem)
+
+    navigate("/cart")
+  }
 
   const selectedVariant = useMemo(() => {
     if (product.variants.length > 0 && variantId) {

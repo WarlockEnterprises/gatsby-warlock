@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo } from "react"
 import PropTypes from "prop-types"
 import { Link } from "gatsby"
 import Navbar from "react-bootstrap/Navbar"
@@ -33,7 +33,11 @@ const links = [
 
 const Header = ({ siteTitle }) => {
   const { items } = useCart()
-  console.log(items)
+
+  const itemCount = useMemo(() => {
+    return items.length
+  }, [items])
+
   return (
     <Navbar bg="white" expand="md">
       <Container>
@@ -65,7 +69,7 @@ const Header = ({ siteTitle }) => {
             >
               <i className="bi bi-cart3" />
               <span className="ms-2 d-inline d-md-none">Cart</span>
-              <Badge>{items.count}</Badge>
+              <Badge>{itemCount}</Badge>
             </Link>
           </Nav>
         </Navbar.Collapse>

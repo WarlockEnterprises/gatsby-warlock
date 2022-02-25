@@ -9,7 +9,7 @@ $orange: #f46c34;
 $green: #00a84f;
 
 $primary: $green;
-$secondary: $blue;
+$info: $blue;
 $danger: $red;
 $warning: $orange;
 
@@ -43,3 +43,4 @@ button.btn,
 
 @import "./header.scss";
 @import "./gallery.scss";
+@import "./cart.scss";
