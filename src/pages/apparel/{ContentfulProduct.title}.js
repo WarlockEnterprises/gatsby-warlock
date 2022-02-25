@@ -1,16 +1,26 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { graphql } from "gatsby"
 import Layout from "../../components/layout"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
-import { Button, Col, Row } from "react-bootstrap"
+import { Col, Row } from "react-bootstrap"
 import ProductForm from "../../components/product/ProductForm"
 import ProductSelect from "../../components/product/ProductSelect"
+import { useCart } from "react-use-cart"
 
-export default function ProductPage({ params, data }) {
+export default function ProductPage({ data }) {
   const { title, image, products } = data.contentfulProduct
+  const { addItem } = useCart()
+
   const [selectedProduct, setSelectedProduct] = useState()
+
   const addToCart = ({ variant, quantity }) => {
-    console.log("add to card", variant.external_id, quantity)
+    const { external_id, name, retail_price } = variant
+    const newItem = {
+      id: external_id,
+      name,
+      price: retail_price * 100,
+    }
+    console.log(addItem)
   }
 
   return (

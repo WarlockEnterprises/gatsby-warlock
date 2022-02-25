@@ -5,6 +5,8 @@ import Navbar from "react-bootstrap/Navbar"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
 import brandLogo from "../assets/images/brand-logo.svg"
+import { Badge } from "react-bootstrap"
+import { useCart } from "react-use-cart"
 
 const links = [
   {
@@ -30,6 +32,8 @@ const links = [
 ]
 
 const Header = ({ siteTitle }) => {
+  const { items } = useCart()
+  console.log(items)
   return (
     <Navbar bg="white" expand="md">
       <Container>
@@ -37,27 +41,31 @@ const Header = ({ siteTitle }) => {
           <img
             loading="eager"
             src={brandLogo}
-            height={"87px"}
+            height="60px"
             alt="Warlock Logo"
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto d-flex flex-row align-items-center">
+          <Nav className="ms-auto">
             {links.map(({ label, color, path }) => (
               <Nav.Link
                 as={Link}
                 activeStyle={{ textDecoration: "underline" }}
                 key={`header-link-${label}`}
                 to={path}
-                className={`me-5 ${color}`}
+                className={`me-3 ${color} d-flex justify-content-end justify-content-md-center align-items-center`}
               >
                 {label}
               </Nav.Link>
             ))}
-            <Link to="/cart" className="nav-link cart-link text-black">
+            <Link
+              to="/cart"
+              className="nav-link cart-link text-black d-flex justify-content-end justify-content-md-center align-items-center me-3 me-md-0"
+            >
               <i className="bi bi-cart3" />
               <span className="ms-2 d-inline d-md-none">Cart</span>
+              <Badge>{items.count}</Badge>
             </Link>
           </Nav>
         </Navbar.Collapse>

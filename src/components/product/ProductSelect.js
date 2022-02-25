@@ -12,7 +12,7 @@ export default function ProductSelect({
     if (products.length > 0 && !selectedProduct) {
       setSelectedProduct(products[0])
     }
-  }, [products])
+  }, [products, selectedProduct, setSelectedProduct])
 
   return (
     <>

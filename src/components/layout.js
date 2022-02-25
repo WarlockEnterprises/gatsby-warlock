@@ -13,6 +13,7 @@ import Header from "./header"
 import "../assets/styles/layout.scss"
 import { Container } from "react-bootstrap"
 import Seo from "./seo"
+import { CartProvider } from "react-use-cart"
 
 const Layout = ({ title, children }) => {
   const data = useStaticQuery(graphql`
@@ -28,8 +29,10 @@ const Layout = ({ title, children }) => {
   return (
     <div>
       <Seo title={title} />
-      <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
-      <Container className="pt-3">{children}</Container>
+      <CartProvider>
+        <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
+        <Container className="pt-3">{children}</Container>
+      </CartProvider>
     </div>
   )
 }
