@@ -37,9 +37,6 @@ const IndexPage = ({ data }) => {
 
 export const query = graphql`
   {
-    printfulStore {
-      id
-    }
     allContentfulProduct(sort: { fields: createdAt, order: ASC }) {
       products: nodes {
         title
