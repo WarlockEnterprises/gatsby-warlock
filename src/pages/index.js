@@ -10,9 +10,15 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout title={"Home"}>
-      <Row className="g-5 position-relative">
+      <Row className="g-3 g-md-4 position-relative justify-content-center">
         {products.map((p) => (
-          <Col key={p.id} xs={12} md={6} lg={4} className="text-center mb-5">
+          <Col
+            key={p.id}
+            xs={6}
+            md={5}
+            lg={4}
+            className="text-center mb-5 pb-5"
+          >
             <Link
               to={p.apparelPath}
               className="text-decoration-none text-black"
@@ -24,8 +30,8 @@ const IndexPage = ({ data }) => {
                   className="product-image"
                 />
               </div>
-              <div className="mt-3">
-                <span className="font-days-one text-center my-2 text-uppercase">
+              <div>
+                <span className="font-days-one text-center text-uppercase">
                   "{p.title}"
                 </span>
               </div>

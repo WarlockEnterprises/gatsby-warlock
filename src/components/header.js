@@ -45,7 +45,7 @@ const Header = ({ siteTitle }) => {
           <img
             loading="eager"
             src={brandLogo}
-            height="60px"
+            height="80px"
             alt="Warlock Logo"
           />
         </Navbar.Brand>
@@ -55,9 +55,10 @@ const Header = ({ siteTitle }) => {
             {links.map(({ label, color, path }) => (
               <Nav.Link
                 as={Link}
-                activeStyle={{ textDecoration: "underline" }}
+                activeStyle={{ opacity: 1 }}
                 key={`header-link-${label}`}
                 to={path}
+                style={{ opacity: 0.7 }}
                 className={`me-3 ${color} d-flex justify-content-end justify-content-md-center align-items-center`}
               >
                 {label}
