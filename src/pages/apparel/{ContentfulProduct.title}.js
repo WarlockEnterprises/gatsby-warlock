@@ -28,7 +28,7 @@ export default function ProductPage({ data }) {
               <h4 className="font-days-one">"{title}"</h4>
             </Col>
             <Col xs={12}>
-              {products ? (
+              {products && products.length > 0 ? (
                 <ProductSelect
                   products={products}
                   setSelectedProduct={setSelectedProduct}
@@ -51,7 +51,7 @@ export const query = graphql`
     contentfulProduct(id: { eq: $id }) {
       title
       image {
-        gatsbyImageData(layout: CONSTRAINED)
+        gatsbyImageData
       }
       products: linkedPrintfulProducts {
         id

@@ -32,6 +32,7 @@ export default function CartList() {
               <td>
                 <Form.Control
                   type="number"
+                  aria-label={`${name} quantity`}
                   className="w-auto border-0 text-align-right"
                   style={{ maxWidth: "100px" }}
                   min="1"

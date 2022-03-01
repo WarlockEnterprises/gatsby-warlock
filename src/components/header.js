@@ -65,11 +65,19 @@ const Header = ({ siteTitle }) => {
             ))}
             <Link
               to="/cart"
-              className="nav-link cart-link text-black d-flex justify-content-end justify-content-md-center align-items-center me-3 me-md-0"
+              className="nav-link cart-link text-black d-flex justify-content-end justify-content-md-center align-items-center me-3 me-md-0 position-relative"
             >
-              <i className="bi bi-cart3" />
+              <div className="position-relative">
+                <i className="bi bi-cart3"></i>
+                <Badge
+                  pill
+                  className="position-absolute"
+                  style={{ top: "-3px", right: "-8px", fontSize: "10px" }}
+                >
+                  {itemCount}
+                </Badge>
+              </div>
               <span className="ms-2 d-inline d-md-none">Cart</span>
-              <Badge>{itemCount}</Badge>
             </Link>
           </Nav>
         </Navbar.Collapse>

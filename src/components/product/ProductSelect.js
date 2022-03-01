@@ -13,7 +13,7 @@ export default function ProductSelect({
       setSelectedProduct(products[0])
     }
   }, [products, selectedProduct, setSelectedProduct])
-
+  console.log(products)
   return (
     <>
       <Form.Label>Product select:</Form.Label>

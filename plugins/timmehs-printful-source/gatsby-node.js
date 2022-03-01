@@ -1,4 +1,4 @@
-const PrintfulApi = require("./helpers")
+const PrintfulApi = require("./PrintfulApi")
 const { createRemoteFileNode } = require("gatsby-source-filesystem")
 
 exports.pluginOptionsSchema = ({ Joi }) => {
@@ -50,10 +50,11 @@ exports.sourceNodes = async (
     } catch (e) {
       console.error("timmehs-printful-source", e)
     }
-
+    const { variants: variantCount, ...remainingProps } = product
     return {
-      ...product,
+      ...remainingProps,
       id: productNodeId,
+      variant_count: variantCount,
       productImage___NODE: productImageNode,
       variants___NODE: variants.map(({ id }) => id.toString()),
       parent: null,
@@ -68,7 +69,6 @@ exports.sourceNodes = async (
   async function processVariantData({ variant, productNodeId }) {
     const variantId = variant.id.toString()
 
-    console.log("VARIANT NODE", variantId)
     return {
       ...variant,
       id: variantId,
@@ -80,11 +80,9 @@ exports.sourceNodes = async (
       },
     }
   }
-  console.log("Pre-Promise!!")
+
   await Promise.all(
     printfulProducts.map(async ({ sync_product, sync_variants }) => {
-      console.log("Creating product node", sync_product.external_id)
-
       const productNodeData = await processProductData({
         sync_product,
         sync_variants,
