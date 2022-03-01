@@ -11,10 +11,10 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: `gatsby-source-printful`,
+      resolve: `timmehs-printful-source`,
       options: {
-        apiKey: `${process.env.PRINTFUL_API_KEY}`,
-        paginationLimit: 20,
+        apiKey: process.env.PRINTFUL_API_KEY,
+        paginationLimit: 50,
       },
     },
     {
@@ -36,5 +36,6 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
+    `gatsby-plugin-netlify`,
   ],
 }

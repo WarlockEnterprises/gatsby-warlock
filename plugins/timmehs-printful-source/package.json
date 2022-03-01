@@ -1,0 +1,9 @@
+{
+  "name": "timmehs-printful-source",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "printful-request": "^1.1.1"
+  }
+}

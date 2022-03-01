@@ -10,18 +10,20 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout title={"Home"}>
-      <Row className="g-4 position-relative">
+      <Row className="g-5 position-relative">
         {products.map((p) => (
           <Col key={p.id} xs={12} md={6} lg={4} className="text-center mb-5">
             <Link
               to={p.apparelPath}
               className="text-decoration-none text-black"
             >
-              <GatsbyImage
-                image={getImage(p.image)}
-                alt={p.image.title}
-                className="product-image"
-              />
+              <div className="product-image-container">
+                <GatsbyImage
+                  image={getImage(p.image)}
+                  alt={p.image.title}
+                  className="product-image"
+                />
+              </div>
               <div className="mt-3">
                 <span className="font-days-one text-center my-2 text-uppercase">
                   "{p.title}"
@@ -37,9 +39,6 @@ const IndexPage = ({ data }) => {
 
 export const query = graphql`
   {
-    printfulStore {
-      id
-    }
     allContentfulProduct(sort: { fields: createdAt, order: ASC }) {
       products: nodes {
         title
@@ -47,12 +46,7 @@ export const query = graphql`
         apparelPath: gatsbyPath(filePath: "/apparel/{ContentfulProduct.title}")
         image {
           title
-
-          gatsbyImageData(
-            width: 200
-            resizingBehavior: SCALE
-            cropFocus: CENTER
-          )
+          gatsbyImageData(layout: CONSTRAINED)
         }
       }
     }
