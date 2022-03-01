@@ -10,13 +10,7 @@ module.exports = {
     siteUrl: `https://warlockenterprises.com`,
   },
   plugins: [
-    // {
-    //   resolve: `gatsby-source-printful`,
-    //   options: {
-    //     apiKey: `${process.env.PRINTFUL_API_KEY}`,
-    //     paginationLimit: 20,
-    //   },
-    // },
+    `timmehs-printful-source`,
     {
       resolve: `gatsby-source-contentful`,
       options: {
