@@ -67,11 +67,6 @@ export const query = graphql`
           retail_price
           name
           id
-          variantImage {
-            childImageSharp {
-              gatsbyImageData(width: 70, height: 70)
-            }
-          }
         }
       }
     }
