@@ -5,7 +5,7 @@ import Layout from "../components/layout"
 const CartPage = () => {
   return (
     <Layout title={"Cart"}>
-      <h1>Cart</h1>
+      <h1 className="text-center">Cart</h1>
       <CartList />
     </Layout>
   )
