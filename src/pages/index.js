@@ -12,7 +12,7 @@ const IndexPage = ({ data }) => {
     <Layout title={"Home"}>
       <Row className="g-5 position-relative">
         {products.map((p) => (
-          <Col key={p.id} xs={12} md={6} lg={4} className="text-center mb-5">
+          <Col key={p.id} xs={6} md={5} lg={4} className="text-center mb-5">
             <Link
               to={p.apparelPath}
               className="text-decoration-none text-black"
