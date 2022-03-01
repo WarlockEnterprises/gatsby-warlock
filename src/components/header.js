@@ -69,13 +69,15 @@ const Header = ({ siteTitle }) => {
             >
               <div className="position-relative">
                 <i className="bi bi-cart3"></i>
-                <Badge
-                  pill
-                  className="position-absolute"
-                  style={{ top: "-3px", right: "-8px", fontSize: "10px" }}
-                >
-                  {itemCount}
-                </Badge>
+                {itemCount > 0 && (
+                  <Badge
+                    pill
+                    className="position-absolute"
+                    style={{ top: "-3px", right: "-8px", fontSize: "10px" }}
+                  >
+                    {itemCount}
+                  </Badge>
+                )}
               </div>
               <span className="ms-2 d-inline d-md-none">Cart</span>
             </Link>
