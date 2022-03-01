@@ -6,8 +6,6 @@ exports.createResolvers = ({ createResolvers }) => {
       linkedPrintfulProducts: {
         type: ["PrintfulProduct"],
         resolve: async (source, args, context, info) => {
-          console.log("using regex ", `/(${source.title})/i`)
-
           const { entries } = await context.nodeModel.findAll({
             query: {
               filter: {
