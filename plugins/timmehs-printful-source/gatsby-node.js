@@ -21,12 +21,19 @@ exports.pluginOptionsSchema = ({ Joi }) => {
 }
 
 exports.sourceNodes = async (
-  { actions: { createNode }, cache, createContentDigest, createNodeId, store },
+  {
+    actions: { createNode },
+    cache,
+    createContentDigest,
+    createNodeId,
+    store,
+    reporter,
+  },
   { apiKey, paginationLimit }
 ) => {
   const PRINTFUL_PRODUCT_TYPE = "PrintfulProduct"
   const PRINTFUL_PRODUCT_VARIANT_TYPE = "PrintfulProductVariant"
-  const printful = new PrintfulApi({ apiKey, paginationLimit })
+  const printful = new PrintfulApi({ apiKey, paginationLimit, reporter })
   const printfulProducts = await printful.getPrintfulStoreData()
 
   // Create Product Node data
@@ -81,12 +88,16 @@ exports.sourceNodes = async (
     }
   }
 
+  let productsCount = 0
+  let variantsCount = 0
+
   await Promise.all(
     printfulProducts.map(async ({ sync_product, sync_variants }) => {
       const productNodeData = await processProductData({
         sync_product,
         sync_variants,
       })
+      productsCount += 1
 
       createNode(productNodeData)
 
@@ -98,8 +109,12 @@ exports.sourceNodes = async (
               productNodeId: productNodeData.id,
             })
           )
+          variantsCount += 1
         })
       )
     })
+  )
+  reporter.success(
+    `Printful: ${productsCount} PrintfulProduct nodes, ${variantsCount} PrintfulProductVariant nodes`
   )
 }

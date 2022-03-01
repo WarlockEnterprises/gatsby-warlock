@@ -1,9 +1,10 @@
 const { PrintfulClient } = require("printful-request")
 
 class PrintfulApi {
-  constructor({ apiKey, paginationLimit }) {
+  constructor({ apiKey, paginationLimit, reporter }) {
     this.printful = new PrintfulClient(apiKey)
     this.paginationLimit = paginationLimit
+    this.reporter = reporter
   }
 
   // Get products for this store
@@ -25,7 +26,6 @@ class PrintfulApi {
 
       if (ids.length >= paging.total) {
         complete = true
-        console.log("IDs acquired.", ids.length, paging)
         return ids
       } else {
         offset += limit
@@ -50,6 +50,7 @@ class PrintfulApi {
   async getPrintfulStoreData() {
     const ids = await this.getProductIds()
     const products = await this.getProducts(ids)
+    this.reporter.info(`Printful: ${products.length} products acquired`)
     return products
   }
 }
