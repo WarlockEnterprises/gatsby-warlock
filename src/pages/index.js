@@ -10,32 +10,35 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout title={"Home"}>
-      <div className="">
-        <Row className="g-0 p-0" data-masonry='{"percentPosition": true}'>
-          {products.map((p) => (
-            <Col key={p.id} xs="6" md="4" className="p-2 overflow-hidden">
-              <Link
-                to={p.apparelPath}
-                className="text-decoration-none text-black product-image-container"
-                style={{ minWidth: "100%" }}
-              >
-                <div className="product-image">
-                  <GatsbyImage
-                    image={getImage(p.image)}
-                    className="product-image"
-                    alt={p.image.title}
-                  />
-                  <div className="label-container p-2">
-                    <span className="font-days-one fs-6 text-center">
-                      {p.title}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </Col>
-          ))}
-        </Row>
-      </div>
+      <Row className="g-3 g-md-4 position-relative justify-content-center">
+        {products.map((p) => (
+          <Col
+            key={p.id}
+            xs={6}
+            md={5}
+            lg={4}
+            className="text-center mb-5 pb-5"
+          >
+            <Link
+              to={p.apparelPath}
+              className="text-decoration-none text-black"
+            >
+              <div className="product-image-container">
+                <GatsbyImage
+                  image={getImage(p.image)}
+                  alt={p.image.title}
+                  className="product-image"
+                />
+              </div>
+              <div>
+                <span className="font-days-one text-center text-uppercase">
+                  "{p.title}"
+                </span>
+              </div>
+            </Link>
+          </Col>
+        ))}
+      </Row>
     </Layout>
   )
 }
@@ -49,7 +52,7 @@ export const query = graphql`
         apparelPath: gatsbyPath(filePath: "/apparel/{ContentfulProduct.title}")
         image {
           title
-          gatsbyImageData(layout: CONSTRAINED, width: 330)
+          gatsbyImageData(layout: CONSTRAINED)
         }
       }
     }
