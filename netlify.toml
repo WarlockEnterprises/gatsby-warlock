@@ -1,0 +1,3 @@
+[build]
+    functions = "serverless-functions"
+    command = "cd functions && yarn && cd .."
