@@ -5,10 +5,13 @@ import Form from "react-bootstrap/Form"
 import { useCart } from "react-use-cart"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import { Link } from "gatsby"
+import CartCheckoutButton from "./CartCheckoutButton"
 
 // Hopefully responsive enough to fit in a cart dropdown
 export default function CartList() {
   const { items, removeItem, updateItemQuantity } = useCart()
+
+  const initCheckout = async () => {}
 
   return items.length > 0 ? (
     <div style={{ maxWidth: "600px", margin: "0 auto" }}>
@@ -58,9 +61,7 @@ export default function CartList() {
         <Link className="btn btn-light" to="/">
           Continue shopping
         </Link>
-        <Button variant="warning" className="text-white">
-          Checkout
-        </Button>
+        <CartCheckoutButton items={items} />
       </div>
     </div>
   ) : (

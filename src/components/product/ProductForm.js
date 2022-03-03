@@ -22,6 +22,7 @@ export default function ProductForm({ product }) {
       name,
       price: retail_price * 100,
       image: product.productImage,
+      quantity,
     }
 
     addItem(newItem)
@@ -55,7 +56,7 @@ export default function ProductForm({ product }) {
           <Form.Control
             type="number"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(parseInt(e.target.value))}
           />
         </Form.Group>
       </Col>
