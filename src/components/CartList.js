@@ -20,7 +20,7 @@ export default function CartList() {
             <th>Price</th>
             <th>Quantity</th>
             <th>Total</th>
-            <th />
+            <th> </th>
           </tr>
           {items.map(({ id, image, price, quantity, name }) => (
             <tr key={`cart-item-${id}`}>
