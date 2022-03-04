@@ -39,7 +39,9 @@ export default function CartList() {
                   min="1"
                   max="10"
                   value={quantity}
-                  onChange={(e) => updateItemQuantity(id, e.target.value)}
+                  onChange={(e) =>
+                    updateItemQuantity(id, parseInt(e.target.value))
+                  }
                 />
               </td>
               <td>${((quantity * price) / 100.0).toFixed(2)}</td>

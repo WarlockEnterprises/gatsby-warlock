@@ -2,6 +2,7 @@ import * as React from "react"
 import Button from "react-bootstrap/Button"
 import axios from "axios"
 import { loadStripe } from "@stripe/stripe-js"
+import { getSrc } from "gatsby-plugin-image"
 
 let stripePromise
 const getStripe = (pk) => {
@@ -15,9 +16,10 @@ const getStripe = (pk) => {
 // Hopefully responsive enough to fit in a cart dropdown
 export default function CartCheckoutButton({ items }) {
   const normalizeItems = () => {
-    return items.map(({ external_id, name, quantity, price }) => ({
+    return items.map(({ external_id, name, quantity, price, image }) => ({
       name,
       quantity,
+      image: getSrc(image),
       price,
       external_id,
     }))
