@@ -1,14 +1,42 @@
 import * as React from "react"
-import Table from "react-bootstrap/Table"
 import Button from "react-bootstrap/Button"
-import Form from "react-bootstrap/Form"
-import { useCart } from "react-use-cart"
-import { GatsbyImage, getImage } from "gatsby-plugin-image"
-import { Link } from "gatsby"
+import axios from "axios"
+import { loadStripe } from "@stripe/stripe-js"
+
+let stripePromise
+const getStripe = (pk) => {
+  if (!stripePromise) {
+    console.log("key", pk)
+    stripePromise = loadStripe(pk)
+  }
+  return stripePromise
+}
 
 // Hopefully responsive enough to fit in a cart dropdown
 export default function CartCheckoutButton({ items }) {
-  const initCheckout = async () => {}
+  const normalizeItems = () => {
+    return items.map(({ external_id, name, quantity, price }) => ({
+      name,
+      quantity,
+      price,
+      external_id,
+    }))
+  }
+
+  const initCheckout = async () => {
+    const response = await axios.post("/.netlify/functions/start-checkout", {
+      items: normalizeItems,
+    })
+    console.log(response.data, "data")
+    const stripe = await getStripe(response.data.publishableKey)
+    const { error } = await stripe.redirectToCheckout({
+      sessionId: response.data.sessionId,
+    })
+
+    if (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <Button

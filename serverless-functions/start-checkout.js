@@ -6,14 +6,11 @@ const normalizeLineItem = ({ id, name, quantity, price, image }) => ({
 })
 
 exports.handler = async (event) => {
+  console.log(JSON.parse(event.body))
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    billing_address_collection: "auto",
-    shipping_address_collection: {
-      allowed_countries: ["US", "CA"],
-    },
+    mode: "payment",
     success_url: `${process.env.URL}`, // success redirect
-    cancel_url: process.env.URL, // cancel redirect
+    cancel_url: `${process.env.URL}`, // cancel redirect
     line_items: [
       {
         name: "test product",

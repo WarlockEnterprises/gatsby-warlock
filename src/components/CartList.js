@@ -11,8 +11,6 @@ import CartCheckoutButton from "./CartCheckoutButton"
 export default function CartList() {
   const { items, removeItem, updateItemQuantity } = useCart()
 
-  const initCheckout = async () => {}
-
   return items.length > 0 ? (
     <div style={{ maxWidth: "600px", margin: "0 auto" }}>
       <Table className="cart-table" responsive="md">
