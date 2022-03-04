@@ -15,9 +15,11 @@ export default function ProductForm({ product }) {
   }, [product])
 
   const addToCart = ({ variant, quantity }) => {
-    const { external_id, name, retail_price } = variant
+    const { external_id, name, retail_price, variant_id } = variant
     const newItem = {
       id: external_id,
+      variant_id,
+      external_id,
       name,
       price: retail_price * 100,
       image: product.productImage,

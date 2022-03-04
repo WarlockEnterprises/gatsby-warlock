@@ -1,25 +1,45 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
+const { PrintfulClient } = require("printful-request")
 
-const normalizeLineItem = ({ id, name, quantity, price, image }) => ({
-  name,
-  quantity,
-})
+const printful = new PrintfulClient(process.env.PRINTFUL_API_KEY)
 
+/**
+ * 1. Verify items/prices with printful
+ * 2. Create sessionw it Stripe
+ * 3. Return session id to client
+ */
 exports.handler = async (event) => {
-  console.log(JSON.parse(event.body))
+  const { items } = JSON.parse(event.body)
+
+  const { code, result } = await printful.get(`sync/variant/${items[0].id}`)
+
+  const validatedLineItems = await Promise.all(
+    items.map(async (listItem) => {
+      const { code, result } = await printful.get(`sync/variant/${listItem.id}`)
+      if (code == 200) {
+        const printfulVariant = result.sync_variant
+        const printfulPrice = parseFloat(printfulVariant.retail_price) * 100
+
+        const { name, id, image, quantity } = listItem
+
+        return {
+          name,
+          images: [image],
+          currency: "USD",
+          quantity,
+          amount: printfulPrice,
+        }
+      }
+    })
+  )
+
+  console.log(validatedLineItems, "validated line items")
+
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    success_url: `${process.env.URL}`, // success redirect
-    cancel_url: `${process.env.URL}`, // cancel redirect
-    line_items: [
-      {
-        name: "test product",
-        description: "test description",
-        amount: 1000,
-        currency: "USD",
-        quantity: 2,
-      },
-    ],
+    success_url: `${process.env.URL}/order-success`, // success redirect
+    cancel_url: `${process.env.URL}/cart`, // cancel redirect
+    line_items: validatedLineItems,
   })
 
   return {

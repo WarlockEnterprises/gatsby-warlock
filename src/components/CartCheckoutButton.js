@@ -15,21 +15,28 @@ const getStripe = (pk) => {
 
 // Hopefully responsive enough to fit in a cart dropdown
 export default function CartCheckoutButton({ items }) {
+  console.log(items)
   const normalizeItems = () => {
-    return items.map(({ external_id, name, quantity, price, image }) => ({
-      name,
-      quantity,
-      image: getSrc(image),
-      price,
-      external_id,
-    }))
+    return items.map(
+      ({ external_id, variant_id, name, quantity, price, image }) => ({
+        name,
+        quantity,
+        image: getSrc(image),
+        price,
+        id: variant_id,
+        external_id: external_id,
+        variant_id: variant_id,
+      })
+    )
   }
 
   const initCheckout = async () => {
     const response = await axios.post("/.netlify/functions/start-checkout", {
-      items: normalizeItems,
+      items: normalizeItems(),
     })
+
     console.log(response.data, "data")
+
     const stripe = await getStripe(response.data.publishableKey)
     const { error } = await stripe.redirectToCheckout({
       sessionId: response.data.sessionId,
