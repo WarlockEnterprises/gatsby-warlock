@@ -7,7 +7,6 @@ import { getSrc } from "gatsby-plugin-image"
 let stripePromise
 const getStripe = (pk) => {
   if (!stripePromise) {
-    console.log("key", pk)
     stripePromise = loadStripe(pk)
   }
   return stripePromise
@@ -15,7 +14,6 @@ const getStripe = (pk) => {
 
 // Hopefully responsive enough to fit in a cart dropdown
 export default function CartCheckoutButton({ items }) {
-  console.log(items)
   const normalizeItems = () => {
     return items.map(
       ({ external_id, variant_id, name, quantity, price, image }) => ({
@@ -34,8 +32,6 @@ export default function CartCheckoutButton({ items }) {
     const response = await axios.post("/.netlify/functions/start-checkout", {
       items: normalizeItems(),
     })
-
-    console.log(response.data, "data")
 
     const stripe = await getStripe(response.data.publishableKey)
     const { error } = await stripe.redirectToCheckout({

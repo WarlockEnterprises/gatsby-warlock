@@ -18,7 +18,7 @@ exports.handler = async (event) => {
         const printfulVariant = result.sync_variant
         const printfulPrice = parseFloat(printfulVariant.retail_price) * 100
 
-        const { name, id, image, quantity } = listItem
+        const { name, image, quantity, variantId } = listItem
 
         return {
           name,
@@ -31,13 +31,17 @@ exports.handler = async (event) => {
     })
   )
 
-  console.log(validatedLineItems, "validated line items")
-
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    success_url: `${process.env.URL}/order-success`, // success redirect
+    shipping_address_collection: {
+      allowed_countries: ["US", "CA", "MX", "FR", "GB"],
+    },
+    success_url: `${process.env.URL}/order-success?session_id={CHECKOUT_SESSION_ID}`, // success redirect
     cancel_url: `${process.env.URL}/cart`, // cancel redirect
     line_items: validatedLineItems,
+    metadata: Object.fromEntries(
+      items.map(({ id, quantity }) => [id, quantity])
+    ),
   })
 
   return {
