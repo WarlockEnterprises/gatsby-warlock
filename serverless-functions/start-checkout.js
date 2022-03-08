@@ -11,8 +11,6 @@ const printful = new PrintfulClient(process.env.PRINTFUL_API_KEY)
 exports.handler = async (event) => {
   const { items } = JSON.parse(event.body)
 
-  const { code, result } = await printful.get(`sync/variant/${items[0].id}`)
-
   const validatedLineItems = await Promise.all(
     items.map(async (listItem) => {
       const { code, result } = await printful.get(`sync/variant/${listItem.id}`)
