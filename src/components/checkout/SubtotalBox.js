@@ -1,12 +1,19 @@
-import * as React from "react"
+import React, { useMemo } from "react"
 import { useCart } from "react-use-cart"
 import Card from "react-bootstrap/Card"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 
-const SubtotalBox = ({ shippingCost }) => {
+const SubtotalBox = ({ shippingCost, shippingMethod }) => {
   const { items, cartTotal } = useCart()
-  console.log(items)
+
+  const subtotal = useMemo(() => {
+    let sum = cartTotal
+    if (shippingMethod) {
+      sum += shippingMethod.rate * 100
+    }
+    return (sum / 100).toFixed(2)
+  }, [cartTotal, shippingMethod])
 
   return (
     <Card>
@@ -34,11 +41,18 @@ const SubtotalBox = ({ shippingCost }) => {
             </Col>
           </Row>
         ))}
-        <Row>
+        <hr />
+        {shippingMethod && (
+          <Row className="small mb-3">
+            <Col xs={9}>{shippingMethod.name}</Col>
+            <Col className="d-flex justify-content-end">
+              ${shippingMethod.rate}
+            </Col>
+          </Row>
+        )}
+        <Row className="small">
           <Col className="fw-bold">Subtotal:</Col>
-          <Col className="d-flex justify-content-end">
-            ${(cartTotal / 100).toFixed(2)}
-          </Col>
+          <Col className="d-flex justify-content-end">${subtotal}</Col>
         </Row>
       </Card.Body>
     </Card>

@@ -20,13 +20,12 @@ exports.handler = async (event) => {
     currency: "USD",
     locale: "en_US",
   }
-  console.log(payload)
 
+  let data
   try {
-    const shippingQuote = await printful.post("/shipping/rates", payload)
-    console.log(shippingQuote)
+    data = await printful.post("/shipping/rates", payload)
   } catch (e) {
-    console.error(e)
+    data = e
   }
 
   return {
@@ -34,22 +33,6 @@ exports.handler = async (event) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      shipping: "ok",
-    }),
+    body: JSON.stringify(data),
   }
 }
-
-// function getShippingRate() {
-//   printful
-//     .post("/shipping/rates", {
-//       recipient,
-//       items,
-//       currency: "USD",
-//       locale: "en_US",
-//     })
-//     .then((response) => {
-//       console.log(response)
-//     })
-//     .catch((e) => console.error(e))
-// }
