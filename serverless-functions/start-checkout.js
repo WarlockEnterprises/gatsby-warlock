@@ -5,7 +5,7 @@ const printful = new PrintfulClient(process.env.PRINTFUL_API_KEY)
 
 /**
  * 1. Verify items/prices with printful
- * 2. Create sessionw it Stripe
+ * 2. Create session it Stripe
  * 3. Return session id to client
  */
 exports.handler = async (event) => {

@@ -61,7 +61,10 @@ export default function CartList() {
         <Link className="btn btn-light" to="/">
           Continue shopping
         </Link>
-        <CartCheckoutButton items={items} />
+        {/* <CartCheckoutButton items={items} /> */}
+        <Link className="btn btn-warning text-white" to="/checkout">
+          Checkout
+        </Link>
       </div>
     </div>
   ) : (
