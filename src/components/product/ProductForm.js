@@ -22,6 +22,7 @@ export default function ProductForm({ product }) {
       external_id,
       name,
       price: retail_price * 100,
+      retail_price,
       image: product.productImage,
     }
 
