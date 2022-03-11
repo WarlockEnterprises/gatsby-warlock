@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
@@ -6,29 +6,11 @@ import Button from "react-bootstrap/Button"
 import axios from "axios"
 import { useCart } from "react-use-cart"
 import { Card, Spinner } from "react-bootstrap"
+import RecipientInfo from "./RecipientInfo"
 
 const COUNTRIES_URL = "/.netlify/functions/printful-countries"
 const SHIPPING_RATES_URL = "/.netlify/functions/calculate-shipment"
-
-const RecipientInfo = ({
-  firstName,
-  lastName,
-  address1,
-  address2,
-  city,
-  state_code,
-  country_code,
-  zip,
-}) => (
-  <>
-    <div>{firstName + " " + lastName}</div>
-    <div>{address1}</div>
-    <div>{address2}</div>
-    <div>{[city, state_code].join(", ")}</div>
-    <div>{country_code}</div>
-    <div>{zip}</div>
-  </>
-)
+const TAX_RATE_URL = "/.netlify/functions/calculate-tax"
 
 const AddressForm = ({
   setRecipient,
@@ -37,22 +19,22 @@ const AddressForm = ({
   setShippingError,
   loading,
   updateLoading,
+  setTaxRate,
 }) => {
   const [editing, setEditing] = useState(true)
   const [validated, setValidated] = useState(false)
   const [countries, setCountries] = useState([])
-  const [states, setStates] = useState(null)
   const { items } = useCart()
 
-  useEffect(() => {
+  // Set state options for selected country
+  const stateOptions = useMemo(() => {
     let selectedCountry = countries.find(
       (c) => c.code === recipient.country_code
     )
-    if (selectedCountry) {
-      setStates(selectedCountry.states)
-    }
+    return selectedCountry ? selectedCountry.states : null
   }, [recipient.country_code, countries])
 
+  // Populate countries
   useEffect(() => {
     if (countries.length === 0) {
       getCountries()
@@ -72,18 +54,6 @@ const AddressForm = ({
   const updateForm = (fieldName) => (e) =>
     setRecipient({ ...recipient, [fieldName]: e.target.value })
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget
-    event.preventDefault()
-    event.stopPropagation()
-
-    if (form.checkValidity()) {
-      requestShipping({ formData: recipient, items })
-    }
-
-    setValidated(true)
-  }
-
   const requestShipping = async ({ formData, items }) => {
     updateLoading("shippingOptions", true)
     const { data } = await axios.post(SHIPPING_RATES_URL, {
@@ -99,6 +69,27 @@ const AddressForm = ({
     updateLoading("shippingOptions", false)
   }
 
+  const requestTax = async () => {
+    const { data } = await axios.post(TAX_RATE_URL, { formData: recipient })
+    console.log(data)
+    if (data.result.required) {
+      setTaxRate(data.result.rate)
+    }
+  }
+
+  const handleSubmit = (event) => {
+    const form = event.currentTarget
+    event.preventDefault()
+    event.stopPropagation()
+
+    if (form.checkValidity()) {
+      requestShipping({ formData: recipient, items })
+      requestTax()
+    }
+
+    setValidated(true)
+  }
+
   return (
     <Card className="mb-4">
       <Card.Header className="d-flex justify-content-between align-items-center">
@@ -109,6 +100,7 @@ const AddressForm = ({
             onClick={() => {
               setEditing(true)
               setShippingOptions(null)
+              setTaxRate(null)
             }}
           >
             Edit
@@ -121,6 +113,17 @@ const AddressForm = ({
         ) : (
           <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Row className="g-3">
+              <Col xs={12}>
+                <Form.Group>
+                  <Form.Label htmlFor="firstName">Email</Form.Label>
+                  <Form.Control
+                    id="email"
+                    required
+                    value={recipient.email}
+                    onChange={updateForm("email")}
+                  />
+                </Form.Group>
+              </Col>
               <Col xs={6}>
                 <Form.Group>
                   <Form.Label htmlFor="firstName">First name</Form.Label>
@@ -195,7 +198,7 @@ const AddressForm = ({
                 </Form.Select>
               </Col>
               <Col xs={6}>
-                {states && (
+                {stateOptions && (
                   <>
                     <Form.Label htmlFor="state">State</Form.Label>
                     <Form.Select
@@ -206,7 +209,7 @@ const AddressForm = ({
                       value={recipient.state_code}
                     >
                       <option value="">Choose a state</option>
-                      {states.map((c) => (
+                      {stateOptions.map((c) => (
                         <option key={`state-option-${c.name}`} value={c.code}>
                           {c.name}
                         </option>

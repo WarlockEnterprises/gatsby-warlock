@@ -5,7 +5,6 @@ import Form from "react-bootstrap/Form"
 import { useCart } from "react-use-cart"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import { Link } from "gatsby"
-import CartCheckoutButton from "./CartCheckoutButton"
 
 // Hopefully responsive enough to fit in a cart dropdown
 export default function CartList() {

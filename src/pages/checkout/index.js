@@ -6,9 +6,12 @@ import Alert from "react-bootstrap/Alert"
 import AddressForm from "../../components/checkout/AddressForm"
 import SubtotalBox from "../../components/checkout/SubtotalBox"
 import ShippingOptions from "../../components/checkout/ShippingOptions"
+import StripeContainer from "../../components/checkout/StripeContainer"
 import CartCheckoutButton from "../../components/CartCheckoutButton"
+import { Link } from "gatsby"
 
 const defaultRecipient = {
+  email: "",
   firstName: "",
   lastName: "",
   address1: "",
@@ -21,6 +24,7 @@ const defaultRecipient = {
 
 export default function CheckoutPage() {
   const [recipient, setRecipient] = useState(defaultRecipient)
+  const [taxRate, setTaxRate] = useState(null)
   const [shippingOptions, setShippingOptions] = useState(null)
   const [loading, setLoading] = useState({ shippingOptions: false })
   const [selectedShipping, setSelectedShipping] = useState(null)
@@ -30,6 +34,7 @@ export default function CheckoutPage() {
     if (!shippingOptions) {
       console.log("clearing selected shipping")
       setSelectedShipping(null)
+      setTaxRate(null)
     }
   }, [shippingOptions])
 
@@ -49,6 +54,7 @@ export default function CheckoutPage() {
             loading={loading}
             setShippingError={setShippingError}
             setShippingOptions={setShippingOptions}
+            setTaxRate={setTaxRate}
           />
           <ShippingOptions
             recipient={recipient}
@@ -59,13 +65,22 @@ export default function CheckoutPage() {
           />
         </Col>
         <Col xs={{ span: 12, order: 1 }} lg={{ span: 5, order: 2 }}>
-          <SubtotalBox selectedShipping={selectedShipping} />
+          <SubtotalBox selectedShipping={selectedShipping} taxRate={taxRate} />
         </Col>
         <Col xs={{ span: 12, order: 3 }} className="text-center">
           <CartCheckoutButton
-            selectedShipping={selectedShipping}
             recipient={recipient}
+            selectedShipping={selectedShipping}
           />
+          {/* <StripeContainer
+            recipient={recipient}
+            selectedShipping={selectedShipping}
+          /> */}
+        </Col>
+        <Col className="text-center" xs={{ span: 12, order: 4 }}>
+          <Link className="btn btn-light" to="/cart">
+            Back to cart
+          </Link>
         </Col>
       </Row>
     </Layout>
