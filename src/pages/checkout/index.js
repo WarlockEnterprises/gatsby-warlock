@@ -24,7 +24,7 @@ const defaultRecipient = {
 
 export default function CheckoutPage() {
   const [recipient, setRecipient] = useState(defaultRecipient)
-  const [taxRate, setTaxRate] = useState(null)
+  const [tax, setTax] = useState(null)
   const [shippingOptions, setShippingOptions] = useState(null)
   const [loading, setLoading] = useState({ shippingOptions: false })
   const [selectedShipping, setSelectedShipping] = useState(null)
@@ -34,7 +34,7 @@ export default function CheckoutPage() {
     if (!shippingOptions) {
       console.log("clearing selected shipping")
       setSelectedShipping(null)
-      setTaxRate(null)
+      setTax(null)
     }
   }, [shippingOptions])
 
@@ -54,7 +54,7 @@ export default function CheckoutPage() {
             loading={loading}
             setShippingError={setShippingError}
             setShippingOptions={setShippingOptions}
-            setTaxRate={setTaxRate}
+            setTax={setTax}
           />
           <ShippingOptions
             recipient={recipient}
@@ -63,20 +63,16 @@ export default function CheckoutPage() {
             setSelectedShipping={setSelectedShipping}
             shippingOptions={shippingOptions}
           />
-        </Col>
-        <Col xs={{ span: 12, order: 1 }} lg={{ span: 5, order: 2 }}>
-          <SubtotalBox selectedShipping={selectedShipping} taxRate={taxRate} />
-        </Col>
-        <Col xs={{ span: 12, order: 3 }} className="text-center">
-          <CartCheckoutButton
+          <StripeContainer
             recipient={recipient}
+            setTax={setTax}
             selectedShipping={selectedShipping}
           />
-          {/* <StripeContainer
-            recipient={recipient}
-            selectedShipping={selectedShipping}
-          /> */}
         </Col>
+        <Col xs={{ span: 12, order: 1 }} lg={{ span: 5, order: 2 }}>
+          <SubtotalBox selectedShipping={selectedShipping} tax={tax} />
+        </Col>
+        <Col xs={{ span: 12, order: 3 }} className="text-center"></Col>
         <Col className="text-center" xs={{ span: 12, order: 4 }}>
           <Link className="btn btn-light" to="/cart">
             Back to cart

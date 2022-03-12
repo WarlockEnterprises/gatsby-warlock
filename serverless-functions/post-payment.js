@@ -31,36 +31,12 @@ const recipientFromSession = ({ shipping, customer_details }) => {
  */
 
 exports.handler = async (event) => {
-  const { session_id } = JSON.parse(event.body)
-  console.log(session_id, "sesh bro")
+  const stuff = JSON.parse(event.body)
+  console.log(stuff)
 
-  const session = await stripe.checkout.sessions.retrieve(session_id)
-  const customer = await stripe.customers.retrieve(session.customer)
-
-  const items = Object.entries(session.metadata).map(([key, value]) => ({
-    sync_variant_id: parseInt(key),
-    quantity: value,
-  }))
-  const recipient = recipientFromSession(session)
-
-  console.log("items", items)
-  console.log("recipient", recipient)
-
-  // const printfulItems =
-  // const recipient = extractRecipientFromSession(session)
-
-  const order = await printful.post("orders?confirm=false", {
-    shipping: "STANDARD",
-    recipient,
-    items,
-  })
-
-  console.log(order)
+  // Change printful order to pending
 
   return {
     statusCode: 200,
-    body: JSON.stringify({
-      order,
-    }),
   }
 }

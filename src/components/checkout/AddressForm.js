@@ -10,7 +10,6 @@ import RecipientInfo from "./RecipientInfo"
 
 const COUNTRIES_URL = "/.netlify/functions/printful-countries"
 const SHIPPING_RATES_URL = "/.netlify/functions/calculate-shipment"
-const TAX_RATE_URL = "/.netlify/functions/calculate-tax"
 
 const AddressForm = ({
   setRecipient,
@@ -19,7 +18,7 @@ const AddressForm = ({
   setShippingError,
   loading,
   updateLoading,
-  setTaxRate,
+  setTax,
 }) => {
   const [editing, setEditing] = useState(true)
   const [validated, setValidated] = useState(false)
@@ -51,6 +50,7 @@ const AddressForm = ({
     }
   }
 
+  // Generic onChange function for address form fields
   const updateForm = (fieldName) => (e) =>
     setRecipient({ ...recipient, [fieldName]: e.target.value })
 
@@ -69,14 +69,6 @@ const AddressForm = ({
     updateLoading("shippingOptions", false)
   }
 
-  const requestTax = async () => {
-    const { data } = await axios.post(TAX_RATE_URL, { formData: recipient })
-    console.log(data)
-    if (data.result.required) {
-      setTaxRate(data.result.rate)
-    }
-  }
-
   const handleSubmit = (event) => {
     const form = event.currentTarget
     event.preventDefault()
@@ -84,7 +76,6 @@ const AddressForm = ({
 
     if (form.checkValidity()) {
       requestShipping({ formData: recipient, items })
-      requestTax()
     }
 
     setValidated(true)
@@ -100,7 +91,7 @@ const AddressForm = ({
             onClick={() => {
               setEditing(true)
               setShippingOptions(null)
-              setTaxRate(null)
+              setTax(null)
             }}
           >
             Edit

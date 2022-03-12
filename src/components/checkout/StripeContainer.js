@@ -8,20 +8,20 @@ import StripeForm from "./StripeForm"
 const PAYMENT_URL = "/.netlify/functions/secure-payment"
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
 
-const StripeContainer = ({ recipient, selectedShipping }) => {
+const StripeContainer = ({ recipient, selectedShipping, setTax }) => {
   const { items } = useCart()
   const [clientSecret, setClientSecret] = useState("")
 
   useEffect(() => {
-    if (recipient && selectedShipping && !clientSecret) {
+    if (recipient && selectedShipping) {
       axios
         .post(PAYMENT_URL, { items, recipient, selectedShipping })
         .then(({ data }) => {
-          console.log(data)
+          setTax(parseFloat(data.orderInfo.tax))
           setClientSecret(data.clientSecret)
         })
     }
-  }, [clientSecret, recipient, selectedShipping, items])
+  }, [recipient, selectedShipping])
 
   const options = {
     clientSecret,

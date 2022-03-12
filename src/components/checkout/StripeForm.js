@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
+import { Button } from "react-bootstrap"
 
 export default function StripeForm() {
   const stripe = useStripe()
@@ -43,8 +44,6 @@ export default function StripeForm() {
     e.preventDefault()
 
     if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
       return
     }
 
@@ -53,8 +52,7 @@ export default function StripeForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000",
+        return_url: "/order-success",
       },
     })
 
@@ -73,14 +71,19 @@ export default function StripeForm() {
   }
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
+    <form id="payment-form" className="col-12" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
+      <Button
+        variant="warning"
+        className="text-white mt-3 w-100"
+        disabled={isLoading || !stripe || !elements}
+        id="submit"
+      >
+        <span id="Button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
-      </button>
-      {/* Show any error or success messages */}
+      </Button>
+      {/* Show any errorBr success messages */}
       {message && <div id="payment-message">{message}</div>}
     </form>
   )

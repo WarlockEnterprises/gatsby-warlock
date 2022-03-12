@@ -10,10 +10,11 @@ const printful = new PrintfulClient(process.env.PRINTFUL_API_KEY)
  */
 exports.handler = async (event) => {
   const { items, selectedShipping, recipient } = JSON.parse(event.body)
-
+  console.log("early items", items)
   const normalizedPrintfulItems = items.map((i) => ({
     sync_variant_id: i.variant_id,
     quantity: i.quantity,
+    retail_price: i.retail_price,
   }))
 
   const { firstName, lastName, ...remainingRecipient } = recipient
@@ -25,15 +26,16 @@ exports.handler = async (event) => {
   console.log("items", normalizedPrintfulItems)
   console.log("recipient", normalizedRecipient)
 
-  const order = await printful.post("orders", {
-    recipient: normalizedRecipient,
-    shipping: selectedShipping.id,
-    items: normalizedPrintfulItems,
-    retail_costs: {
-      currency: "USD",
-    },
-  })
-  console.log(order)
+  // const order = await printful.post("orders", {
+  //   recipient: normalizedRecipient,
+  //   shipping: selectedShipping.id,
+  //   items: normalizedPrintfulItems,
+  //   retail_costs: {
+  //     currency: "USD",
+  //   },
+  // })
+  // console.log(order)
+  // console.log(order.result.items)
 
   // Normalized line items for stripe
   // const validatedLineItems = await Promise.all(
