@@ -10,11 +10,7 @@ const OrderConfirmation = () => {
 
   useEffect(() => emptyCart(), [])
 
-  return (
-    <div>
-      <p>Put order info here</p>
-    </div>
-  )
+  return <div>{/* <p>Put order info here</p> */}</div>
 }
 
 const OrderSuccessPage = ({ location }) => {

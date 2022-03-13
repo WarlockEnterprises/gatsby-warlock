@@ -6,7 +6,7 @@ export default function StripeForm() {
   const stripe = useStripe()
   const elements = useElements()
 
-  const [message, setMessage] = useState("wheres this go?")
+  const [message, setMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function StripeForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "https://a9d6-135-180-190-149.ngrok.io/order-success",
+        return_url: `https://${window.location.hostname}/order-success`,
       },
     })
 
