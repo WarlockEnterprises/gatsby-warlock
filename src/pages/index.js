@@ -4,41 +4,46 @@ import { graphql, Link } from "gatsby"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
+import "../assets/styles/alternative-gallery.scss"
 
 const IndexPage = ({ data }) => {
   const { products } = data.allContentfulProduct
 
   return (
     <Layout title={"Home"}>
-      <Row className="g-3 g-md-4 position-relative justify-content-center">
-        {products.map((p) => (
-          <Col
-            key={p.id}
-            xs={6}
-            md={5}
-            lg={4}
-            className="text-center mb-5 pb-5"
-          >
-            <Link
-              to={p.apparelPath}
-              className="text-decoration-none text-black"
-            >
-              <div className="product-image-container">
-                <GatsbyImage
-                  image={getImage(p.image)}
-                  alt={p.image.title}
-                  className="product-image"
-                />
-              </div>
-              <div>
-                <span className="font-days-one text-center text-uppercase">
-                  "{p.title}"
-                </span>
-              </div>
-            </Link>
-          </Col>
-        ))}
-      </Row>
+      <div className="">
+        <Row className="g-0 p-0" data-masonry='{"percentPosition": true}'>
+          {products.map((p) => (
+            <Col key={p.id} xs="6" md="4" lg="3" className="overflow-hidden">
+              <Link
+                to={p.apparelPath}
+                className="text-decoration-none text-black alt-product-image-container justify-content-center align-items-center"
+                style={{ minWidth: "100%" }}
+              >
+                <div className="alt-product-image">
+                  <GatsbyImage
+                    image={getImage(p.image)}
+                    className="alt-product-image"
+                    alt={p.image.title}
+                  />
+                  <div className="label-container p-2">
+                    <span className="font-days-one fs-6 text-center">
+                      "{p.title}"
+                    </span>
+                    <p className="small text-muted">
+                      {p.printfulProducts &&
+                        p.printfulProducts.length > 0 &&
+                        `${p.printfulProducts.length} product${
+                          p.printfulProducts.length > 1 ? "s" : ""
+                        }`}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </Col>
+          ))}
+        </Row>
+      </div>
     </Layout>
   )
 }
@@ -52,7 +57,10 @@ export const query = graphql`
         apparelPath: gatsbyPath(filePath: "/apparel/{ContentfulProduct.title}")
         image {
           title
-          gatsbyImageData(layout: CONSTRAINED)
+          gatsbyImageData(layout: CONSTRAINED, width: 330)
+        }
+        printfulProducts: linkedPrintfulProducts {
+          id
         }
       }
     }
