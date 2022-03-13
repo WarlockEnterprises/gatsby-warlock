@@ -15,16 +15,18 @@ export default function ProductForm({ product }) {
   }, [product])
 
   const addToCart = ({ variant, quantity }) => {
-    const { external_id, name, retail_price } = variant
-
+    const { external_id, name, retail_price, variant_id } = variant
     const newItem = {
       id: external_id,
+      variant_id,
+      external_id,
       name,
       price: retail_price * 100,
+      retail_price,
       image: product.productImage,
     }
 
-    addItem(newItem)
+    addItem(newItem, quantity)
 
     navigate("/cart")
   }
@@ -55,7 +57,7 @@ export default function ProductForm({ product }) {
           <Form.Control
             type="number"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => setQuantity(parseInt(e.target.value))}
           />
         </Form.Group>
       </Col>

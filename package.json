@@ -5,6 +5,8 @@
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.7.0",
+    "@stripe/stripe-js": "^1.24.0",
     "bootstrap": "^5.1.3",
     "bootstrap-icons": "^1.8.1",
     "gatsby": "^4.7.1",
@@ -19,13 +21,15 @@
     "gatsby-source-filesystem": "^4.7.0",
     "gatsby-source-printful": "^2.4.0",
     "gatsby-transformer-sharp": "^4.7.0",
+    "printful-request": "^1.1.1",
     "prop-types": "^15.8.0",
     "react": "^17.0.1",
     "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
     "react-use-cart": "^1.13.0",
-    "sass": "^1.49.7"
+    "sass": "^1.49.7",
+    "stripe": "^8.207.0"
   },
   "devDependencies": {
     "prettier": "^2.5.1"
