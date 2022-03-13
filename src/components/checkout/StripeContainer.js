@@ -8,7 +8,7 @@ import StripeForm from "./StripeForm"
 const PAYMENT_URL = "/.netlify/functions/secure-payment"
 const stripePromise = loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
 
-const StripeContainer = ({ recipient, selectedShipping, setTax }) => {
+const StripeContainer = ({ recipient, selectedShipping, setOrderInfo }) => {
   const { items } = useCart()
   const [clientSecret, setClientSecret] = useState("")
 
@@ -17,7 +17,7 @@ const StripeContainer = ({ recipient, selectedShipping, setTax }) => {
       axios
         .post(PAYMENT_URL, { items, recipient, selectedShipping })
         .then(({ data }) => {
-          setTax(parseFloat(data.orderInfo.tax))
+          setOrderInfo(data.orderInfo)
           setClientSecret(data.clientSecret)
         })
     }
@@ -28,7 +28,7 @@ const StripeContainer = ({ recipient, selectedShipping, setTax }) => {
     appearance: { theme: "stripe" },
   }
 
-  return clientSecret ? (
+  return clientSecret && selectedShipping ? (
     <Elements options={options} stripe={stripePromise}>
       <StripeForm />
     </Elements>

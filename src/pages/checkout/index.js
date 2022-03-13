@@ -7,7 +7,6 @@ import AddressForm from "../../components/checkout/AddressForm"
 import SubtotalBox from "../../components/checkout/SubtotalBox"
 import ShippingOptions from "../../components/checkout/ShippingOptions"
 import StripeContainer from "../../components/checkout/StripeContainer"
-import CartCheckoutButton from "../../components/CartCheckoutButton"
 import { Link } from "gatsby"
 
 const defaultRecipient = {
@@ -24,17 +23,17 @@ const defaultRecipient = {
 
 export default function CheckoutPage() {
   const [recipient, setRecipient] = useState(defaultRecipient)
-  const [tax, setTax] = useState(null)
   const [shippingOptions, setShippingOptions] = useState(null)
   const [loading, setLoading] = useState({ shippingOptions: false })
   const [selectedShipping, setSelectedShipping] = useState(null)
   const [shippingError, setShippingError] = useState(null)
+  const [orderInfo, setOrderInfo] = useState(null)
 
   useEffect(() => {
     if (!shippingOptions) {
       console.log("clearing selected shipping")
       setSelectedShipping(null)
-      setTax(null)
+      setOrderInfo(null)
     }
   }, [shippingOptions])
 
@@ -54,7 +53,7 @@ export default function CheckoutPage() {
             loading={loading}
             setShippingError={setShippingError}
             setShippingOptions={setShippingOptions}
-            setTax={setTax}
+            setOrderInfo={setOrderInfo}
           />
           <ShippingOptions
             recipient={recipient}
@@ -65,12 +64,15 @@ export default function CheckoutPage() {
           />
           <StripeContainer
             recipient={recipient}
-            setTax={setTax}
+            setOrderInfo={setOrderInfo}
             selectedShipping={selectedShipping}
           />
         </Col>
         <Col xs={{ span: 12, order: 1 }} lg={{ span: 5, order: 2 }}>
-          <SubtotalBox selectedShipping={selectedShipping} tax={tax} />
+          <SubtotalBox
+            selectedShipping={selectedShipping}
+            orderInfo={orderInfo}
+          />
         </Col>
         <Col xs={{ span: 12, order: 3 }} className="text-center"></Col>
         <Col className="text-center" xs={{ span: 12, order: 4 }}>

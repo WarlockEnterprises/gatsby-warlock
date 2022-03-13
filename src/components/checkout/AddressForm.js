@@ -18,7 +18,7 @@ const AddressForm = ({
   setShippingError,
   loading,
   updateLoading,
-  setTax,
+  setOrderInfo,
 }) => {
   const [editing, setEditing] = useState(true)
   const [validated, setValidated] = useState(false)
@@ -91,7 +91,7 @@ const AddressForm = ({
             onClick={() => {
               setEditing(true)
               setShippingOptions(null)
-              setTax(null)
+              setOrderInfo(null)
             }}
           >
             Edit

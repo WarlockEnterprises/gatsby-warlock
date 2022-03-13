@@ -3,6 +3,11 @@ const { PrintfulClient } = require("printful-request")
 
 const printful = new PrintfulClient(process.env.PRINTFUL_API_KEY)
 
+async function getTaxRate(recipient) {
+  const { result } = await printful.post("/tax/rates", { recipient })
+  return result.required ? result.rate : 0
+}
+
 exports.handler = async (event) => {
   const { items, selectedShipping, recipient } = JSON.parse(event.body)
 
@@ -30,13 +35,25 @@ exports.handler = async (event) => {
     },
   })
 
-  const orderInfo = {
-    tax: result.costs.tax,
-    retail_costs: result.retail_costs,
-  }
+  // Get tax rate for customer's state (from Printful API)
+  const taxRate = await getTaxRate(recipient)
 
-  const amount =
-    (parseFloat(orderInfo.retail_costs.total) + parseFloat(orderInfo.tax)) * 100
+  // Subtotal * Sales tax rate
+  const taxAmount = parseInt(
+    Math.ceil(parseFloat(result.retail_costs.subtotal * 100) * taxRate)
+  )
+
+  // Shipping + subtotal + tax
+  const amount = parseInt(
+    parseFloat(result.retail_costs.total) * 100 + taxAmount
+  )
+
+  const orderInfo = {
+    retail_costs: result.retail_costs,
+    taxAmount: taxAmount,
+    taxRate: taxRate,
+    total: (amount / 100).toFixed(2),
+  }
 
   const paymentIntent = await stripe.paymentIntents.create({
     currency: "USD",

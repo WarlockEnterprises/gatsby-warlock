@@ -11,10 +11,10 @@ const OrderSuccessPage = ({ location }) => {
   useEffect(() => {
     if (!finalizingOrder) {
       setFinalizingOrder(true)
-      const { session_id } = queryString.parse(location.search)
-      if (session_id) {
+      const { payment_intent } = queryString.parse(location.search)
+      if (payment_intent) {
         axios
-          .post("/.netlify/functions/post-payment", { session_id })
+          .post("/.netlify/functions/post-payment", { payment_intent })
           .then((res) => {
             console.log(res)
           })
@@ -34,7 +34,9 @@ const OrderSuccessPage = ({ location }) => {
       ) : (
         <div className="text-center">
           <h1 className="text-center">Order successful</h1>
-          <p className="text-center">Thank you for shopping!</p>
+          <p className="text-center">
+            Thank you for supporting Warlock Enterprises!
+          </p>
           <Link className="btn text-white btn-warning" to="/">
             Back to shopping
           </Link>

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
-import { Button } from "react-bootstrap"
+import { Button, Spinner } from "react-bootstrap"
 
 export default function StripeForm() {
   const stripe = useStripe()
   const elements = useElements()
 
-  const [message, setMessage] = useState(null)
+  const [message, setMessage] = useState("wheres this go?")
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -23,6 +23,7 @@ export default function StripeForm() {
     }
 
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+      console.log("retrieved payment intent")
       switch (paymentIntent.status) {
         case "succeeded":
           setMessage("Payment succeeded!")
@@ -52,7 +53,7 @@ export default function StripeForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "/order-success",
+        return_url: "https://a9d6-135-180-190-149.ngrok.io/order-success",
       },
     })
 
@@ -75,16 +76,17 @@ export default function StripeForm() {
       <PaymentElement id="payment-element" />
       <Button
         variant="warning"
-        className="text-white mt-3 w-100"
+        className="text-white my-3 w-100"
         disabled={isLoading || !stripe || !elements}
+        type="submit"
         id="submit"
       >
         <span id="Button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+          {isLoading ? <Spinner size="sm" animation="border" /> : "Pay now"}
         </span>
       </Button>
       {/* Show any errorBr success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      <p>{message && <span id="payment-message">{message}</span>}</p>
     </form>
   )
 }

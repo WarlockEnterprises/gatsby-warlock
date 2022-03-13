@@ -4,21 +4,8 @@ import Card from "react-bootstrap/Card"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 
-const SubtotalBox = ({ selectedShipping, tax }) => {
+const SubtotalBox = ({ selectedShipping, orderInfo }) => {
   const { items, cartTotal } = useCart()
-
-  const subtotal = useMemo(() => {
-    let sum = cartTotal
-
-    if (selectedShipping) {
-      sum += selectedShipping.rate * 100
-    }
-
-    if (tax) {
-      sum += tax * 100
-    }
-    return (sum / 100).toFixed(2)
-  }, [cartTotal, selectedShipping, tax])
 
   return (
     <Card>
@@ -47,29 +34,32 @@ const SubtotalBox = ({ selectedShipping, tax }) => {
           </Row>
         ))}
         <hr />
-        <Row className="small mb-3">
-          <Col>Subtotal:</Col>
+        <Row className="small">
+          <Col xs={9}>Subtotal:</Col>
           <Col className="d-flex justify-content-end">
             ${(cartTotal / 100).toFixed(2)}
           </Col>
-        </Row>
-        {selectedShipping && (
-          <Row className="small mb-3">
-            <Col xs={9}>Shipping</Col>
-            <Col className="d-flex justify-content-end">
-              ${selectedShipping.rate}
-            </Col>
-          </Row>
-        )}
-        {tax && (
-          <Row className="small mb-3">
-            <Col xs={9}>Tax</Col>
-            <Col className="d-flex justify-content-end">${tax}</Col>
-          </Row>
-        )}
-        <Row className="small">
-          <Col className="fw-bold">Total:</Col>
-          <Col className="d-flex justify-content-end">${subtotal}</Col>
+          <Col xs={9}>Shipping</Col>
+          <Col className="d-flex justify-content-end">
+            {selectedShipping && `$${selectedShipping.rate}`}
+          </Col>
+          <Col xs={9}>
+            Tax{" "}
+            {orderInfo && (
+              <span className="text-muted" style={{ fontSize: "12px" }}>
+                ({orderInfo.taxRate}%)
+              </span>
+            )}
+          </Col>
+          <Col className="d-flex justify-content-end">
+            {orderInfo && `$${(orderInfo.taxAmount / 100).toFixed(2)}`}
+          </Col>
+          <Col xs={9} className="fw-bold">
+            Total:
+          </Col>
+          <Col className="d-flex justify-content-end">
+            {orderInfo && `$${orderInfo.total}`}
+          </Col>
         </Row>
       </Card.Body>
     </Card>
