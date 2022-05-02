@@ -21,7 +21,7 @@ const StripeContainer = ({ recipient, selectedShipping, setOrderInfo }) => {
           setClientSecret(data.clientSecret)
         })
     }
-  }, [recipient, selectedShipping])
+  }, [recipient, selectedShipping, items, setOrderInfo])
 
   const options = {
     clientSecret,
