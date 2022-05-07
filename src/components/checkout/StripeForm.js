@@ -50,6 +50,7 @@ export default function StripeForm() {
 
     setIsLoading(true)
 
+    // Can we handle post payment here instead of on page redirect :\
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {

@@ -8,6 +8,13 @@ async function getTaxRate(recipient) {
   return result.required ? result.rate : 0
 }
 
+/**
+ * 1. Normalize cart data into printful order payload
+ * 2. Get estimated costs (like a mock order) from printful
+ * 3. Create payment intent, store order payload in metadata
+ * 4. Return client secret and basic order info to UI.
+ */
+
 exports.handler = async (event) => {
   const { items, selectedShipping, recipient } = JSON.parse(event.body)
 
@@ -23,17 +30,16 @@ exports.handler = async (event) => {
     ...remainingRecipient,
   }
 
-  console.log("items", normalizedPrintfulItems)
-  console.log("recipient", normalizedRecipient)
-
-  const { result } = await printful.post("orders", {
+  const orderPayload = {
     recipient: normalizedRecipient,
     shipping: selectedShipping.id,
     items: normalizedPrintfulItems,
     retail_costs: {
       currency: "USD",
     },
-  })
+  }
+
+  const { result } = await printful.post("orders/estimate-costs", orderPayload)
 
   // Get tax rate for customer's state (from Printful API)
   const taxRate = await getTaxRate(recipient)
@@ -61,9 +67,7 @@ exports.handler = async (event) => {
     automatic_payment_methods: {
       enabled: true,
     },
-    metadata: {
-      orderId: result.id,
-    },
+    metadata: { orderPayload: JSON.stringify(orderPayload) },
     receipt_email: recipient.email,
   })
 

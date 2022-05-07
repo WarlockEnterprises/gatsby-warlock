@@ -5,9 +5,8 @@ const printful = new PrintfulClient(process.env.PRINTFUL_API_KEY)
 
 /**
  * 1. Look up stripe payment intent
- * 2. Get printful order ID from payment metadata
- * 3. Get printful order data to display in confirmation screen
- * 3. Set printful order status to pending -- (Only when site is live)
+ * 2. Get order data from metadata
+ * 3. Create order
  * 4. On error: return error message
  * 5. On success: return Order confirmation data
  *   - Thank you, "customer"
@@ -20,13 +19,8 @@ async function getStripePaymentIntent(paymentIntentId) {
   return paymentIntent
 }
 
-async function getPrintfulOrder(printfulOrderId) {
-  const { result } = await printful.get(`orders/${printfulOrderId}`)
-  return result
-}
-
-async function confirmPrintfulOrder(printfulOrderId) {
-  const { result } = await printful.post(`orders/${printfulOrderId}/confirm`)
+async function createPrintfulOrder(orderData) {
+  const { result } = await printful.post(`orders`, orderData)
   return result
 }
 
@@ -34,18 +28,15 @@ exports.handler = async (event) => {
   const { payment_intent } = JSON.parse(event.body)
 
   const stripePaymentIntent = await getStripePaymentIntent(payment_intent)
+  const orderData = JSON.parse(stripePaymentIntent.metadata.orderPayload)
+
+  console.log("ORDER D", orderData)
 
   // TODO: send this data to UI for order confirmation page
-  const printfulOrder = await getPrintfulOrder(
-    stripePaymentIntent.metadata.orderId
-  )
-
-  // Billing must be set up to connect to Stripe in printful, otherwise these orders fail
-  const confirmOrder = await confirmPrintfulOrder(
-    stripePaymentIntent.metadata.orderId
-  )
+  const printfulOrder = await createPrintfulOrder(orderData)
 
   return {
     statusCode: 200,
+    body: JSON.stringify({ printfulOrder }),
   }
 }
