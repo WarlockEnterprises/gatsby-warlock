@@ -19,9 +19,23 @@ async function getStripePaymentIntent(paymentIntentId) {
   return paymentIntent
 }
 
-async function createPrintfulOrder(orderData) {
-  const { result } = await printful.post(`orders`, orderData)
+// Create printful order using paymentIntentId to prevent duplicates
+async function createPrintfulOrder(orderData, paymentIntentId) {
+  const { result } = await printful.post(`orders`, {
+    ...orderData,
+    external_id: paymentIntentId,
+  })
   return result
+}
+
+async function getPrintfulOrder(externalId) {
+  try {
+    const { result } = await printful.get(`orders/@${externalId}`)
+    return result
+  } catch {
+    console.log("Already created")
+    return false
+  }
 }
 
 exports.handler = async (event) => {
@@ -30,13 +44,27 @@ exports.handler = async (event) => {
   const stripePaymentIntent = await getStripePaymentIntent(payment_intent)
   const orderData = JSON.parse(stripePaymentIntent.metadata.orderPayload)
 
-  console.log("ORDER D", orderData)
+  // Check if printful order for this paymentIntent exists
+  let printfulOrder = await getPrintfulOrder(payment_intent)
+  let emptyCart = false
+  if (!printfulOrder) {
+    printfulOrder = await createPrintfulOrder(orderData, payment_intent)
+    emptyCart = true
+  }
 
-  // TODO: send this data to UI for order confirmation page
-  const printfulOrder = await createPrintfulOrder(orderData)
+  const orderInfo = {
+    items: printfulOrder.items.map(({ id, retail_price, name, quantity }) => ({
+      id,
+      retail_price,
+      name,
+      quantity,
+    })),
+    retail_costs: printfulOrder.retail_costs,
+    created: printfulOrder.created,
+  }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ printfulOrder }),
+    body: JSON.stringify({ orderInfo, emptyCart }),
   }
 }

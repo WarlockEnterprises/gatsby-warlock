@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React from "react"
 import { useCart } from "react-use-cart"
 import Card from "react-bootstrap/Card"
 import Row from "react-bootstrap/Row"

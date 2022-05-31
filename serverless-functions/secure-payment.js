@@ -18,6 +18,7 @@ async function getTaxRate(recipient) {
 exports.handler = async (event) => {
   const { items, selectedShipping, recipient } = JSON.parse(event.body)
 
+  // "Normalized" means for printful here
   const normalizedPrintfulItems = items.map((i) => ({
     sync_variant_id: i.variant_id,
     quantity: i.quantity,
@@ -46,7 +47,7 @@ exports.handler = async (event) => {
 
   // Subtotal * Sales tax rate
   const taxAmount = parseInt(
-    Math.ceil(parseFloat(result.retail_costs.subtotal * 100) * taxRate)
+    Math.floor(parseFloat(result.retail_costs.subtotal * 100) * taxRate)
   )
 
   // Shipping + subtotal + tax
@@ -59,6 +60,12 @@ exports.handler = async (event) => {
     taxAmount: taxAmount,
     taxRate: taxRate,
     total: (amount / 100).toFixed(2),
+  }
+
+  orderPayload.retail_costs = {
+    ...orderPayload.retail_costs,
+    tax: (orderInfo.taxAmount / 100).toFixed(2),
+    total: orderInfo.total,
   }
 
   const paymentIntent = await stripe.paymentIntents.create({

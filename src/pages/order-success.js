@@ -3,19 +3,16 @@ import React, { useEffect, useState } from "react"
 import Layout from "../components/layout"
 import queryString from "query-string"
 import axios from "axios"
-import { useCart } from "react-use-cart"
-
-const OrderConfirmation = () => {
-  const { emptyCart } = useCart()
-
-  useEffect(() => emptyCart(), [])
-
-  return <div>{/* <p>Put order info here</p> */}</div>
-}
+import OrderSummary from "../components/checkout/OrderSummary"
+import Spinner from "react-bootstrap/Spinner"
 
 const OrderSuccessPage = ({ location }) => {
   const [finalizingOrder, setFinalizingOrder] = useState(false)
   const [urlIsMalformed, setUrlIsMalformed] = useState(false)
+  const [orderInfo, setOrderInfo] = useState(null)
+  const [clearCart, setClearCart] = useState(false)
+
+  console.log(process.env.HOST)
 
   useEffect(() => {
     if (!finalizingOrder) {
@@ -25,7 +22,9 @@ const OrderSuccessPage = ({ location }) => {
         axios
           .post("/.netlify/functions/post-payment", { payment_intent })
           .then((res) => {
-            console.log(res)
+            setClearCart(res.data.emptyCart)
+            setOrderInfo(res.data.orderInfo)
+            console.log(res.data)
           })
           .catch((err) => {
             console.error(err)
@@ -43,9 +42,18 @@ const OrderSuccessPage = ({ location }) => {
       ) : (
         <div className="text-center">
           <h1 className="text-center">Order successful</h1>
-          <OrderConfirmation />
+          <div className="text-center">
+            {orderInfo ? (
+              <OrderSummary printfulOrder={orderInfo} clearCart={clearCart} />
+            ) : (
+              <Spinner animation="border" variant="secondary">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            )}
+          </div>
           <p className="text-center">
-            Thank you for supporting Warlock Enterprises!
+            Thank you for supporting Warlock Enterprises! <br />
+            You should receive an email confirmation shortly.
           </p>
           <Link className="btn text-white btn-warning" to="/">
             Back to shopping

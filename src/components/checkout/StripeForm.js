@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { Button, Spinner } from "react-bootstrap"
-
 export default function StripeForm() {
   const stripe = useStripe()
   const elements = useElements()
@@ -50,7 +49,6 @@ export default function StripeForm() {
 
     setIsLoading(true)
 
-    // Can we handle post payment here instead of on page redirect :\
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
