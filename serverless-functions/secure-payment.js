@@ -8,6 +8,36 @@ async function getTaxRate(recipient) {
   return result.required ? result.rate : 0
 }
 
+function stripeCustomerProps({
+  firstName,
+  lastName,
+  email,
+  address1,
+  address2,
+  city,
+  state_code,
+  country_code,
+  zip,
+}) {
+  const fullName = `${firstName} ${lastName}`
+  return {
+    description: fullName,
+    name: fullName,
+    email,
+    shipping: {
+      name: fullName,
+      address: {
+        city,
+        line1: address1,
+        line2: address2,
+        postal_code: zip,
+        state: state_code,
+        country: country_code,
+      },
+    },
+  }
+}
+
 /**
  * 1. Normalize cart data into printful order payload
  * 2. Get estimated costs (like a mock order) from printful
