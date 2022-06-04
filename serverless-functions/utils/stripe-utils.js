@@ -1,4 +1,4 @@
-export function buildCustomerProps({
+function buildCustomerProps({
   firstName,
   lastName,
   email,
@@ -32,11 +32,11 @@ export function buildCustomerProps({
 
 // https://stripe.com/docs/api/checkout/sessions/create?lang=node
 // https://stripe.com/docs/payments/accept-a-payment?integration=checkout
-export async function createLineItem({ item }) {
+async function createLineItem({ item }) {
   return {
     quantity: item.quantity,
     price_data: {
-      currency: "USD",
+      currency: "usd",
       unit_amount_decimal: parseFloat(item.retail_cost),
       product_data: {
         name: item.name,
@@ -45,9 +45,17 @@ export async function createLineItem({ item }) {
   }
 }
 
-export function buildSessionProps({ recipient, items }) {}
+function buildSessionProps({ customer_id, items }) {
+  return {
+    customer: customer_id,
+    line_items: items.map((i) => createLineItem(item)),
+    mode: "payment",
+    success_url: `/order-success`,
+    cancel_url: `/cart`,
+  }
+}
 
-export default {
+module.exports = {
   createPrice,
   buildSessionProps,
   buildCustomerProps,

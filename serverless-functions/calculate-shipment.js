@@ -1,19 +1,15 @@
 require("dotenv").config({
   path: ".env",
 })
-
 const { PrintfulClient } = require("printful-request")
 
 const printful = new PrintfulClient(process.env.PRINTFUL_API_KEY)
-
-/** Stripe testing */
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 exports.handler = async (event) => {
   const { formData, items } = JSON.parse(event.body)
 
   const { address1, city, country_code, state_code, zip } = formData
-  console.log(items)
+
   const payload = {
     recipient: { address1, city, country_code, state_code, zip },
     items: items.map((i) => ({

@@ -5,9 +5,8 @@ import Col from "react-bootstrap/Col"
 import Alert from "react-bootstrap/Alert"
 import AddressForm from "../../components/checkout/AddressForm"
 import SubtotalBox from "../../components/checkout/SubtotalBox"
-import ShippingOptions from "../../components/checkout/ShippingOptions"
-import StripeContainer from "../../components/checkout/StripeContainer"
 import { Link } from "gatsby"
+import PaymentButton from "../../components/checkout/PaymentButton"
 
 const defaultRecipient = {
   email: "",
@@ -55,18 +54,12 @@ export default function CheckoutPage() {
             setShippingOptions={setShippingOptions}
             setOrderInfo={setOrderInfo}
           />
-          <ShippingOptions
-            recipient={recipient}
-            loading={loading}
-            selectedShipping={selectedShipping}
-            setSelectedShipping={setSelectedShipping}
-            shippingOptions={shippingOptions}
-          />
-          <StripeContainer
-            recipient={recipient}
-            setOrderInfo={setOrderInfo}
-            selectedShipping={selectedShipping}
-          />
+          {shippingOptions && (
+            <PaymentButton
+              recipient={recipient}
+              shippingOptions={shippingOptions}
+            />
+          )}
         </Col>
         <Col xs={{ span: 12, order: 1 }} lg={{ span: 5, order: 2 }}>
           <SubtotalBox
