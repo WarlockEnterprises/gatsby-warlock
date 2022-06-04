@@ -1,6 +1,9 @@
 const PrintfulApi = require("./PrintfulApi")
 const { createRemoteFileNode } = require("gatsby-source-filesystem")
 
+const PRINTFUL_PRODUCT_TYPE = "PrintfulProduct"
+const PRINTFUL_PRODUCT_VARIANT_TYPE = "PrintfulProductVariant"
+
 exports.pluginOptionsSchema = ({ Joi }) => {
   return Joi.object({
     apiKey: Joi.string()
@@ -31,8 +34,6 @@ exports.sourceNodes = async (
   },
   { apiKey, paginationLimit }
 ) => {
-  const PRINTFUL_PRODUCT_TYPE = "PrintfulProduct"
-  const PRINTFUL_PRODUCT_VARIANT_TYPE = "PrintfulProductVariant"
   const printful = new PrintfulApi({ apiKey, paginationLimit, reporter })
   const printfulProducts = await printful.getPrintfulStoreData()
 
