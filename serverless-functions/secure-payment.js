@@ -42,6 +42,7 @@ function stripeCustomerProps({
  * 1. Normalize cart data into printful order payload
  * 2. Get estimated costs (like a mock order) from printful
  * 3. Create payment intent, store order payload in metadata
+ *    - Update 6/4/2022 - Create CHECKOUT SESSION which returns a payment intent key
  * 4. Return client secret and basic order info to UI.
  */
 
