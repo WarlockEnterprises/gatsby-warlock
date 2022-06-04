@@ -29,8 +29,10 @@ export function buildCustomerProps({
     },
   }
 }
+
 // https://stripe.com/docs/api/checkout/sessions/create?lang=node
-export async function createPrice({ item }) {
+// https://stripe.com/docs/payments/accept-a-payment?integration=checkout
+export async function createLineItem({ item }) {
   return {
     quantity: item.quantity,
     price_data: {

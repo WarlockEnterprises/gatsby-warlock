@@ -49,6 +49,7 @@ function stripeCustomerProps({
 exports.handler = async (event) => {
   const { items, selectedShipping, recipient } = JSON.parse(event.body)
 
+  /*** BEGIN - PRINTFUL ORDER SETUP ***/
   // "Normalized" means for printful here
   const normalizedPrintfulItems = items.map((i) => ({
     sync_variant_id: i.variant_id,
@@ -86,18 +87,31 @@ exports.handler = async (event) => {
     parseFloat(result.retail_costs.total) * 100 + taxAmount
   )
 
+  /*** END - PRINTFUL ORDER SETUP ***/
+
+  /*** BEGIN - UI SETUP  */
   const orderInfo = {
     retail_costs: result.retail_costs,
     taxAmount: taxAmount,
     taxRate: taxRate,
     total: (amount / 100).toFixed(2),
   }
+  /*** END - UI SETUP ***/
 
+  /*** BEGIN - STRIPE PAYLOAD SETUP */
   orderPayload.retail_costs = {
     ...orderPayload.retail_costs,
     tax: (orderInfo.taxAmount / 100).toFixed(2),
     total: orderInfo.total,
   }
+
+  /**
+   * 1. Build line items
+   * 2. Build customer + shipping info
+   * 3. Create checkout session
+   * 4. get client key from payment intent
+   * 5. return clientSecret in response
+   */
 
   const paymentIntent = await stripe.paymentIntents.create({
     currency: "USD",
