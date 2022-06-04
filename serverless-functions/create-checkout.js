@@ -99,7 +99,7 @@ function buildStripeSessionProps({ customer_id, items, shippingOptions }) {
     customer: customer_id,
     line_items: items.map(buildStripeLineItem),
     mode: "payment",
-    success_url: `${process.env.BASE_URL}/order-success`,
+    success_url: `${process.env.BASE_URL}/order-success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.BASE_URL}/cart`,
     shipping_options: shippingOptions.map(buildShippingOption),
   }
