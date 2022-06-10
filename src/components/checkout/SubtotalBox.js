@@ -6,7 +6,11 @@ import Col from "react-bootstrap/Col"
 
 const SubtotalBox = ({ selectedShipping, orderInfo }) => {
   const { items, cartTotal } = useCart()
-
+  console.log(orderInfo)
+  const total =
+    cartTotal && selectedShipping
+      ? (cartTotal / 100 + parseFloat(selectedShipping.rate)).toFixed(2)
+      : null
   return (
     <Card>
       <Card.Header>Order</Card.Header>
@@ -63,7 +67,7 @@ const SubtotalBox = ({ selectedShipping, orderInfo }) => {
             Total:
           </Col>
           <Col className="d-flex justify-content-end">
-            {orderInfo && `$${orderInfo.total}`}
+            {total && `$${total}`}
           </Col>
         </Row>
       </Card.Body>

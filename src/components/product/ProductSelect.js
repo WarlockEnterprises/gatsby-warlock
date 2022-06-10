@@ -16,7 +16,7 @@ export default function ProductSelect({
 
   return (
     <>
-      <Form.Label>Product select:</Form.Label>
+      <Form.Label>Please select a product:</Form.Label>
       <div className="d-flex flex-row">
         {products.map((p) => {
           const active = selectedProduct && p.id === selectedProduct.id

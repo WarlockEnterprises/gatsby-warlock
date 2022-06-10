@@ -45,7 +45,7 @@ export default function ProductForm({ product }) {
           <Form.Select onChange={(e) => setVariantId(e.target.value)}>
             {product.variants.map((v) => (
               <option key={v.id + "-select"} value={v.id}>
-                {v.name}
+                {v.name} ${v.retail_price}
               </option>
             ))}
           </Form.Select>
