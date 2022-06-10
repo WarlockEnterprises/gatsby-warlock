@@ -1,3 +1,7 @@
+/**
+ * THIS COMPONENT IS UNUSED LEFT FOR REFERENCE
+ */
+
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 import { loadStripe } from "@stripe/stripe-js"

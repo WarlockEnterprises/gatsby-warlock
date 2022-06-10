@@ -1,3 +1,7 @@
+/**
+ * THIS COMPONENT IS UNUSED LEFT FOR REFERENCE
+ */
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 const { PrintfulClient } = require("printful-request")
 
