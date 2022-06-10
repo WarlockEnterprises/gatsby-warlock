@@ -4,8 +4,9 @@ require("dotenv").config({
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
+/** HANDLER */
 exports.handler = async (event) => {
-  const { recipient, items, shippingOptions } = JSON.parse(event.body)
+  const { recipient, items, selectedShipping } = JSON.parse(event.body)
 
   // Build and create customer
   const customerProps = buildStripeCustomerProps(recipient)
@@ -15,7 +16,8 @@ exports.handler = async (event) => {
   const sessionProps = buildStripeSessionProps({
     customer_id: customer.id,
     items,
-    shippingOptions,
+    selectedShipping,
+    metadata: { printfulOrder: buildPrintfulOrder({ recipient, items }) },
   })
   const session = await stripe.checkout.sessions.create(sessionProps)
 
@@ -23,6 +25,31 @@ exports.handler = async (event) => {
     statusCode: 200,
     body: JSON.stringify({ sessionId: session.id }),
   }
+}
+
+/** Printful Utils */
+function buildPrintfulOrder({ recipient, items }) {
+  const normalizedPrintfulItems = items.map((i) => ({
+    sync_variant_id: i.variant_id,
+    quantity: i.quantity,
+    retail_price: i.retail_price,
+  }))
+
+  const { firstName, lastName, ...remainingRecipient } = recipient
+  const normalizedRecipient = {
+    name: `${firstName} ${lastName}`,
+    ...remainingRecipient,
+  }
+
+  const orderPayload = {
+    recipient: normalizedRecipient,
+    items: normalizedPrintfulItems,
+    retail_costs: {
+      currency: "USD",
+    },
+  }
+
+  return JSON.stringify(orderPayload)
 }
 
 /** STRIPE UTILS */
@@ -94,13 +121,26 @@ function buildShippingOption({
   }
 }
 
-function buildStripeSessionProps({ customer_id, items, shippingOptions }) {
+function buildStripeSessionProps({
+  customer_id,
+  items,
+  selectedShipping,
+  metadata,
+}) {
   return {
     customer: customer_id,
+    client_reference_id: randomToken(),
     line_items: items.map(buildStripeLineItem),
     mode: "payment",
     success_url: `${process.env.BASE_URL}/order-success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.BASE_URL}/cart`,
-    shipping_options: shippingOptions.map(buildShippingOption),
+    shipping_options: [buildShippingOption(selectedShipping)],
+    metadata,
   }
+}
+
+function randomToken() {
+  return Array.from(Array(16), () =>
+    Math.floor(Math.random() * 36).toString(36)
+  ).join("")
 }

@@ -5,7 +5,6 @@ import { useCart } from "react-use-cart"
 
 export default function OrderSummary({ printfulOrder, clearCart }) {
   const { items, retail_costs, created } = printfulOrder
-  console.log(printfulOrder)
   const { emptyCart } = useCart()
 
   useEffect(() => {
@@ -57,10 +56,16 @@ export default function OrderSummary({ printfulOrder, clearCart }) {
             Shipping
           </Col>
           <Col className="text-end">{`$${retail_costs.shipping}`}</Col>
-          <Col xs={9} className="text-start">
-            Tax
-          </Col>
-          <Col className="d-flex justify-content-end">${retail_costs.tax}</Col>
+          {retail_costs.tax && (
+            <>
+              <Col xs={9} className="text-start">
+                Tax
+              </Col>
+              <Col className="d-flex justify-content-end">
+                ${retail_costs.tax}
+              </Col>
+            </>
+          )}
           <Col xs={9} className="fw-bold text-start">
             Total:
           </Col>

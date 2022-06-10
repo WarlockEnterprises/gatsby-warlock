@@ -7,6 +7,7 @@ import AddressForm from "../../components/checkout/AddressForm"
 import SubtotalBox from "../../components/checkout/SubtotalBox"
 import { Link } from "gatsby"
 import PaymentButton from "../../components/checkout/PaymentButton"
+import ShippingOptions from "../../components/checkout/ShippingOptions"
 
 const defaultRecipient = {
   email: "",
@@ -54,9 +55,15 @@ export default function CheckoutPage() {
             setShippingOptions={setShippingOptions}
             setOrderInfo={setOrderInfo}
           />
-          {shippingOptions && (
+          <ShippingOptions
+            selectedShipping={selectedShipping}
+            setSelectedShipping={setSelectedShipping}
+            shippingOptions={shippingOptions}
+          />
+          {shippingOptions && selectedShipping && (
             <PaymentButton
               recipient={recipient}
+              selectedShipping={selectedShipping}
               shippingOptions={shippingOptions}
             />
           )}

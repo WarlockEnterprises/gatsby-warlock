@@ -12,19 +12,16 @@ const OrderSuccessPage = ({ location }) => {
   const [orderInfo, setOrderInfo] = useState(null)
   const [clearCart, setClearCart] = useState(false)
 
-  console.log(process.env.HOST)
-
   useEffect(() => {
     if (!finalizingOrder) {
       setFinalizingOrder(true)
-      const { payment_intent } = queryString.parse(location.search)
-      if (payment_intent) {
+      const { session_id } = queryString.parse(location.search)
+      if (session_id) {
         axios
-          .post("/.netlify/functions/post-payment", { payment_intent })
+          .post("/.netlify/functions/post-payment", { session_id })
           .then((res) => {
             setClearCart(res.data.emptyCart)
             setOrderInfo(res.data.orderInfo)
-            console.log(res.data)
           })
           .catch((err) => {
             console.error(err)
@@ -33,7 +30,7 @@ const OrderSuccessPage = ({ location }) => {
         setUrlIsMalformed(true)
       }
     }
-  }, [finalizingOrder, location])
+  }, [finalizingOrder, location.search])
 
   return (
     <Layout title={"Order Complete"}>

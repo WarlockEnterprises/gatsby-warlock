@@ -8,7 +8,7 @@ const ShippingOptions = ({
   setSelectedShipping,
 }) => {
   const [editing, setEditing] = useState(true)
-
+  console.log(selectedShipping)
   return shippingOptions ? (
     <Card className="mb-4">
       <Card.Header className="d-flex justify-content-between align-items-center">

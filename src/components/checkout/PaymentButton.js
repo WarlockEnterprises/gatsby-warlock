@@ -8,9 +8,8 @@ import PropTypes from "prop-types"
 
 const CREATE_CHECKOUT_PATH = "/.netlify/functions/create-checkout"
 
-const PaymentButton = ({ recipient, shippingOptions }) => {
+const PaymentButton = ({ recipient, selectedShipping }) => {
   const { items } = useCart()
-  console.log("farts")
 
   const stripeCheckout = async () => {
     const stripe = await loadStripe(process.env.GATSBY_STRIPE_PUBLISHABLE_KEY)
@@ -18,15 +17,14 @@ const PaymentButton = ({ recipient, shippingOptions }) => {
     const { data } = await axios.post(CREATE_CHECKOUT_PATH, {
       items,
       recipient,
-      shippingOptions,
+      selectedShipping,
     })
-    console.log("data response", data)
     const { error } = await stripe.redirectToCheckout({
       sessionId: data.sessionId,
     })
 
     if (error) {
-      alert(result.error.message)
+      alert(error.message)
     }
   }
 
@@ -39,6 +37,7 @@ const PaymentButton = ({ recipient, shippingOptions }) => {
 
 PaymentButton.propTypes = {
   recipient: PropTypes.object.isRequired,
+  selectedShipping: PropTypes.object.isRequired,
   shippingOptions: PropTypes.array.isRequired,
 }
 
