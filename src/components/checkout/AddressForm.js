@@ -120,6 +120,8 @@ const AddressForm = ({
                   <Form.Label htmlFor="firstName">First name</Form.Label>
                   <Form.Control
                     id="firstName"
+                    name="name"
+                    autoComplete="given-name"
                     required
                     value={recipient.firstName}
                     onChange={updateForm("firstName")}
@@ -131,6 +133,8 @@ const AddressForm = ({
                   <Form.Label htmlFor="lastName">Last Name</Form.Label>
                   <Form.Control
                     id="lastName"
+                    autoComplete="family-name"
+                    name="name"
                     required
                     value={recipient.lastName}
                     onChange={updateForm("lastName")}

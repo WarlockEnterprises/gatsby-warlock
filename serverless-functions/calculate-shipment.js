@@ -1,7 +1,6 @@
 require("dotenv").config({
   path: ".env",
 })
-
 const { PrintfulClient } = require("printful-request")
 
 const printful = new PrintfulClient(process.env.PRINTFUL_API_KEY)

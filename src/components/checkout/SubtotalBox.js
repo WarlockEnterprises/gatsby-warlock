@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React from "react"
 import { useCart } from "react-use-cart"
 import Card from "react-bootstrap/Card"
 import Row from "react-bootstrap/Row"
@@ -6,7 +6,11 @@ import Col from "react-bootstrap/Col"
 
 const SubtotalBox = ({ selectedShipping, orderInfo }) => {
   const { items, cartTotal } = useCart()
-
+  console.log(orderInfo)
+  const total =
+    cartTotal && selectedShipping
+      ? (cartTotal / 100 + parseFloat(selectedShipping.rate)).toFixed(2)
+      : null
   return (
     <Card>
       <Card.Header>Order</Card.Header>
@@ -43,22 +47,27 @@ const SubtotalBox = ({ selectedShipping, orderInfo }) => {
           <Col className="d-flex justify-content-end">
             {selectedShipping && `$${selectedShipping.rate}`}
           </Col>
-          <Col xs={9}>
-            Tax{" "}
-            {orderInfo && (
-              <span className="text-muted" style={{ fontSize: "12px" }}>
-                ({orderInfo.taxRate}%)
-              </span>
+          {orderInfo &&
+            orderInfo.taxAmount(
+              <>
+                <Col xs={9}>
+                  Tax{" "}
+                  {orderInfo && (
+                    <span className="text-muted" style={{ fontSize: "12px" }}>
+                      ({orderInfo.taxRate}%)
+                    </span>
+                  )}
+                </Col>
+                <Col className="d-flex justify-content-end">
+                  {orderInfo && `$${(orderInfo.taxAmount / 100).toFixed(2)}`}
+                </Col>
+              </>
             )}
-          </Col>
-          <Col className="d-flex justify-content-end">
-            {orderInfo && `$${(orderInfo.taxAmount / 100).toFixed(2)}`}
-          </Col>
           <Col xs={9} className="fw-bold">
             Total:
           </Col>
           <Col className="d-flex justify-content-end">
-            {orderInfo && `$${orderInfo.total}`}
+            {total && `$${total}`}
           </Col>
         </Row>
       </Card.Body>

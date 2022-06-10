@@ -1,3 +1,7 @@
+/**
+ * THIS COMPONENT IS UNUSED LEFT FOR REFERENCE
+ */
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 const { PrintfulClient } = require("printful-request")
 
@@ -8,9 +12,49 @@ async function getTaxRate(recipient) {
   return result.required ? result.rate : 0
 }
 
+function stripeCustomerProps({
+  firstName,
+  lastName,
+  email,
+  address1,
+  address2,
+  city,
+  state_code,
+  country_code,
+  zip,
+}) {
+  const fullName = `${firstName} ${lastName}`
+  return {
+    description: fullName,
+    name: fullName,
+    email,
+    shipping: {
+      name: fullName,
+      address: {
+        city,
+        line1: address1,
+        line2: address2,
+        postal_code: zip,
+        state: state_code,
+        country: country_code,
+      },
+    },
+  }
+}
+
+/**
+ * 1. Normalize cart data into printful order payload
+ * 2. Get estimated costs (like a mock order) from printful
+ * 3. Create payment intent, store order payload in metadata
+ *    - Update 6/4/2022 - Create CHECKOUT SESSION which returns a payment intent key
+ * 4. Return client secret and basic order info to UI.
+ */
+
 exports.handler = async (event) => {
   const { items, selectedShipping, recipient } = JSON.parse(event.body)
 
+  /*** BEGIN - PRINTFUL ORDER SETUP ***/
+  // "Normalized" means for printful here
   const normalizedPrintfulItems = items.map((i) => ({
     sync_variant_id: i.variant_id,
     quantity: i.quantity,
@@ -23,24 +67,23 @@ exports.handler = async (event) => {
     ...remainingRecipient,
   }
 
-  console.log("items", normalizedPrintfulItems)
-  console.log("recipient", normalizedRecipient)
-
-  const { result } = await printful.post("orders", {
+  const orderPayload = {
     recipient: normalizedRecipient,
     shipping: selectedShipping.id,
     items: normalizedPrintfulItems,
     retail_costs: {
       currency: "USD",
     },
-  })
+  }
+
+  const { result } = await printful.post("orders/estimate-costs", orderPayload)
 
   // Get tax rate for customer's state (from Printful API)
   const taxRate = await getTaxRate(recipient)
 
   // Subtotal * Sales tax rate
   const taxAmount = parseInt(
-    Math.ceil(parseFloat(result.retail_costs.subtotal * 100) * taxRate)
+    Math.floor(parseFloat(result.retail_costs.subtotal * 100) * taxRate)
   )
 
   // Shipping + subtotal + tax
@@ -48,12 +91,31 @@ exports.handler = async (event) => {
     parseFloat(result.retail_costs.total) * 100 + taxAmount
   )
 
+  /*** END - PRINTFUL ORDER SETUP ***/
+
+  /*** BEGIN - UI SETUP  */
   const orderInfo = {
     retail_costs: result.retail_costs,
     taxAmount: taxAmount,
     taxRate: taxRate,
     total: (amount / 100).toFixed(2),
   }
+  /*** END - UI SETUP ***/
+
+  /*** BEGIN - STRIPE PAYLOAD SETUP */
+  orderPayload.retail_costs = {
+    ...orderPayload.retail_costs,
+    tax: (orderInfo.taxAmount / 100).toFixed(2),
+    total: orderInfo.total,
+  }
+
+  /**
+   * 1. Build line items
+   * 2. Build customer + shipping info
+   * 3. Create checkout session
+   * 4. get client key from payment intent
+   * 5. return clientSecret in response
+   */
 
   const paymentIntent = await stripe.paymentIntents.create({
     currency: "USD",
@@ -61,9 +123,7 @@ exports.handler = async (event) => {
     automatic_payment_methods: {
       enabled: true,
     },
-    metadata: {
-      orderId: result.id,
-    },
+    metadata: { orderPayload: JSON.stringify(orderPayload) },
     receipt_email: recipient.email,
   })
 
