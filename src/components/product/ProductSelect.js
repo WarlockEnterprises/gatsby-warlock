@@ -15,15 +15,17 @@ export default function ProductSelect({
   }, [products, selectedProduct, setSelectedProduct])
 
   return (
-    <>
-      <div>
-        <Form.Label>Please select a product:</Form.Label>
+    <div className="w-100">
+      <div className="pb-3 px-3 d-flex justify-content-center">
         <GatsbyImage
           image={getImage(selectedProduct.highlightImage)}
           alt={selectedProduct.name}
+          layout="fullWidth"
+          objectFit="contain"
         />
-        {selectedProduct && <h5>{selectedProduct.name}</h5>}
       </div>
+      {selectedProduct && <h5>{selectedProduct.name}</h5>}
+      <Form.Label>Please select a product:</Form.Label>
       <div className="d-flex flex-row">
         {products.map((p) => {
           const active = selectedProduct && p.id === selectedProduct.id
@@ -46,6 +48,6 @@ export default function ProductSelect({
           )
         })}
       </div>
-    </>
+    </div>
   )
 }
