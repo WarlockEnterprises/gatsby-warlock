@@ -8,7 +8,7 @@ import ProductSelect from "../../components/product/ProductSelect"
 
 export default function ProductPage({ data }) {
   const { title, image, products } = data.contentfulProduct
-  const [selectedProduct, setSelectedProduct] = useState()
+  const [selectedProduct, setSelectedProduct] = useState(products[0])
 
   return (
     <Layout title={title}>
@@ -16,10 +16,19 @@ export default function ProductPage({ data }) {
         <Col xs={12} className="d-md-none">
           <h4 className="font-days-one text-center">"{title}"</h4>
         </Col>
-        <Col xs={12} md={5} className="d-flex justify-content-center flex-row">
-          <GatsbyImage image={getImage(image)} alt={`Image of ${title}`} />
+        <Col
+          xs={12}
+          md={5}
+          className="d-flex justify-content-center align-items-start flex-row"
+        >
+          <GatsbyImage
+            image={getImage(image)}
+            alt={`Image of ${title}`}
+            layout="fullWidth"
+            objectFit="contain"
+          />
         </Col>
-        <Col />
+        <Col className="d-none d-md-flex" />
 
         {/* RIGHT COLUMN */}
         <Col xs={12} md={6}>
@@ -59,6 +68,15 @@ export const query = graphql`
         productImage {
           childImageSharp {
             gatsbyImageData(width: 100, height: 100)
+          }
+        }
+        highlightImage: productImage {
+          childImageSharp {
+            gatsbyImageData(
+              width: 400
+              placeholder: BLURRED
+              transformOptions: { fit: CONTAIN }
+            )
           }
         }
         variants {
