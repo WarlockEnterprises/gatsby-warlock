@@ -8,7 +8,7 @@ import ProductSelect from "../../components/product/ProductSelect"
 
 export default function ProductPage({ data }) {
   const { title, image, products } = data.contentfulProduct
-  const [selectedProduct, setSelectedProduct] = useState()
+  const [selectedProduct, setSelectedProduct] = useState(products[0])
 
   return (
     <Layout title={title}>
@@ -59,6 +59,11 @@ export const query = graphql`
         productImage {
           childImageSharp {
             gatsbyImageData(width: 100, height: 100)
+          }
+        }
+        highlightImage: productImage {
+          childImageSharp {
+            gatsbyImageData(width: 400, placeholder: BLURRED)
           }
         }
         variants {

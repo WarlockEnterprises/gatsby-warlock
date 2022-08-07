@@ -16,14 +16,21 @@ export default function ProductSelect({
 
   return (
     <>
-      <Form.Label>Please select a product:</Form.Label>
+      <div>
+        <Form.Label>Please select a product:</Form.Label>
+        <GatsbyImage
+          image={getImage(selectedProduct.highlightImage)}
+          alt={selectedProduct.name}
+        />
+        {selectedProduct && <h5>{selectedProduct.name}</h5>}
+      </div>
       <div className="d-flex flex-row">
         {products.map((p) => {
           const active = selectedProduct && p.id === selectedProduct.id
           return (
             <div
               key={`product-btn-${p.id}`}
-              style={{ maxWidth: "101px" }}
+              style={{ maxWidth: "50px" }}
               className="me-2 my-2"
             >
               <Button
@@ -31,6 +38,7 @@ export default function ProductSelect({
                   active ? "primary" : "white"
                 }`}
                 onClick={() => setSelectedProduct(p)}
+                title={p.name}
               >
                 <GatsbyImage image={getImage(p.productImage)} alt={p.name} />
               </Button>
@@ -38,7 +46,6 @@ export default function ProductSelect({
           )
         })}
       </div>
-      {selectedProduct && <h5>{selectedProduct.name}</h5>}
     </>
   )
 }
